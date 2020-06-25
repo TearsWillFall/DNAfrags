@@ -9,6 +9,7 @@ Authors@R:
 Description: This program allows filter DNA fragments in BAM files by length and location by using the SAMTOOLS software.
 Depends:
     R (>= 4.0.0)
+Imports: plyr
 License: GLP-3 + file LICENSE
 Remotes: git::https://github.com/TearsWillFall/BTools.git
 Encoding: UTF-8
