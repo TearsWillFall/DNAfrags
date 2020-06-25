@@ -10,7 +10,6 @@ Description: This program allows filter DNA fragments in BAM files by length and
 Depends:
     R (>= 4.0.0)
 License: GLP-3 + file LICENSE
-Remotes: git::https://github.com/TearsWillFall/BTools.git
 Imports: plyr
 biocViews:
 Encoding: UTF-8
