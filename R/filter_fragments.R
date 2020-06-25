@@ -51,3 +51,22 @@ filter_fragments=function(bin_path="tools/samtools/samtools",file="",bed="",min_
 
 
 }
+
+
+#' Merge BAM files in directory
+#'
+#' This function takes a BAM file and merges it with others found within a
+#' directory. This function is still Work In Progress (WIP).
+#'
+#' @param out_bam Name of merged BAM.
+#' @param bam_dir Path to directory with BAM files to merge.
+#' @param verbose Enables progress messages. Default False.
+#' @export
+
+
+merge_bam=function(bin_path="tools/samtools/samtools",out_bam="",bam_dir="",verbose=FALSE){
+    if(verbose){
+      print(paste(paste0("./",bin_path),"merge",paste0(out_bam,".MERGED.bam"), paste0(bam_dir,"/*.bam")))
+    }
+    system(paste(paste0("./",bin_path),"merge",paste0(out_bam,".MERGED.bam"), paste0(bam_dir,"/*.bam")))
+  }
