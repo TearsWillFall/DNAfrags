@@ -7,6 +7,7 @@
 filter_fragments(
   bin_path = "tools/samtools/samtools",
   file = "",
+  bed = "",
   min_frag_size = 0,
   max_frag_size = 1e+08,
   chr = "",
@@ -20,15 +21,17 @@ filter_fragments(
 
 \item{file}{Path to the input file.}
 
+\item{bed}{Path to a BED input file with multiple genome positions. Default None}
+
 \item{min_frag_size}{Minimum fragment size to keep. Default 1.}
 
 \item{max_frag_size}{Maximum fragment size to keep. Default 10000000.}
 
-\item{chr}{Chromosome to keep. Default None.}
+\item{chr}{Chromosome to keep. Only single chromosomes. Default None.}
 
 \item{start_pos}{Starting position to search within a chromosome. Default 1}
 
-\item{end_pos}{Last position to search within a chromosome. None}
+\item{end_pos}{Last position to search within a chromosome. Default None}
 
 \item{verbose}{Enables progress messages. Default False.}
 }
