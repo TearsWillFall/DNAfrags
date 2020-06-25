@@ -50,8 +50,4 @@ filter_fragments=function(bin_path="tools/samtools/samtools",file="",bed="",min_
   }
 
 
-  }
-
-
-
 }
