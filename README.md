@@ -66,7 +66,8 @@ install_required_tools()
 ```
 ## 4. Usage
 
-**Examples**
+**Examples:**
+
 In this example reads in the BAM file called "myBAM.bam" are only filtered by fragment length. Only fragments between lengths 10 and 150 (inclusive) will be kept  for all chromosomes.
 ```
 DNAfrags::filter_fragments(file="myBAM.bam",min_frag_size=10,max_frag_size=150)
@@ -87,6 +88,8 @@ In this example reads in the BAM file called "myBAM.bam" are filtered by fragmen
 DNAfrags::filter_fragments(file="myBAM.bam",min_frag_size=10,max_frag_size=150,chr=6,start_pos=5566,end_pos=1000000)
 ```
 **Note:To deal with multiple genomic regions 2 solutions exist**
+
+
 In this example reads in the BAM file called "myBAM.bam" are filtered by fragment length in multiple genomic regions. Fragments of lengths 10 and 100 (inclusive) will be kept for specified regions.
 ```
 DNAfrags::filter_fragments(file="myBAM.bam",min_frag_size=10,max_frag_size=150,bed="myBED.bed")
