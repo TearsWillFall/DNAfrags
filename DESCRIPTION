@@ -11,7 +11,7 @@ Depends:
     R (>= 4.0.0)
 License: GLP-3 + file LICENSE
 Remotes: git::https://github.com/TearsWillFall/BTools.git
-Imports:
+Imports: plyr
 biocViews:
 Encoding: UTF-8
 LazyData: true
