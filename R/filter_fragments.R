@@ -43,10 +43,10 @@ filter_fragments=function(bin_path="tools/samtools/samtools",file="",bed="",min_
 
   }else{
     if (verbose){
-      print(paste("./",bin_path,"view -h -L",bed,file," | \ awk 'substr($0,1,1)==\"@\""," || ($9>=",min_frag_size,"&& $9<=",max_frag_size,") ||", "($9<=-",min_frag_size,"&& $9>=",max_frag_size,")' | \ samtools view -b >",paste0(get_sample_name(file),"_",min_frag_size,"-",max_frag_size,".bam")))
+      print(paste("./",bin_path,"view -h -L",bed,file," | \ awk 'substr($0,1,1)==\"@\""," || ($9>=",min_frag_size,"&& $9<=",max_frag_size,") ||", "($9<=-",min_frag_size,"&& $9>=",max_frag_size,")' | \ samtools view -b >",paste0(get_sample_name(file),"_",min_frag_size,"-",max_frag_size,"_multiple-pos.bam")))
 
     }
-    system(paste("./",bin_path,"view -h -L",bed,file," | \ awk 'substr($0,1,1)==\"@\""," || ($9>=",min_frag_size,"&& $9<=",max_frag_size,") ||", "($9<=-",min_frag_size,"&& $9>=",max_frag_size,")' | \ samtools view -b >",paste0(get_sample_name(file),"_",min_frag_size,"-",max_frag_size,".bam")))
+    system(paste("./",bin_path,"view -h -L",bed,file," | \ awk 'substr($0,1,1)==\"@\""," || ($9>=",min_frag_size,"&& $9<=",max_frag_size,") ||", "($9<=-",min_frag_size,"&& $9>=",max_frag_size,")' | \ samtools view -b >",paste0(get_sample_name(file),"_",min_frag_size,"-",max_frag_size,"_multiple-pos.bam")))
   }
 
 
