@@ -20,13 +20,13 @@ These tools can and should be installed using the terminal with the following co
 * **For Ubuntu:**
 
   ```
-  sudo apt install make gcc autoconf
+  sudo apt install git make gcc autoconf
   ```
 
 * **For Arch Linux:**
 
   ```
-  sudo pacman -S make gcc autoconf
+  sudo pacman -S git make gcc autoconf
   ```
   
 Additional dependencies may be needed to succesfully install `devtools` package in R:
