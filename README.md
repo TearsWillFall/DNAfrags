@@ -67,6 +67,10 @@ install_required_tools()
 ```
 ## 4. Usage
 
+![Bioinformatic Workflow example of DNAfrags](https://github.com/TearsWillFall/DNAfrags/blob/master/Graph.png?raw=true)
+
+
+
 **Examples:**
 
 In this example reads in the BAM file called "myBAM.bam" are only filtered by fragment length. Only fragments between lengths 10 and 150 (inclusive) will be kept  for all chromosomes.
