@@ -73,29 +73,39 @@ In this example reads in the BAM file called "myBAM.bam" are only filtered by fr
 DNAfrags::filter_fragments(file="myBAM.bam",min_frag_size=10,max_frag_size=150)
 ```
 
-In this example reads in the BAM file called "myBAM.bam" are filtered by fragment length and a single genomic regions. Only fragments mapped across chromosome 6 between lengths 10 and 100 (inclusive) will be kept.
+In this example reads in the BAM file called "myBAM.bam" are filtered by fragment length and a single genomic regions. Only fragments mapped across chromosome 6 between lengths 10 and 150 (inclusive) will be kept.
 ```
 DNAfrags::filter_fragments(file="myBAM.bam",min_frag_size=10,max_frag_size=150,chr=6)
 ```
 
-In this example reads in the BAM file called "myBAM.bam" are filtered by fragment length and a single genomic regions. Only fragments mapped after the initial 5566 bases in chromosome 6 between lengths 10 and 100 (inclusive) will be kept.
+In this example reads in the BAM file called "myBAM.bam" are filtered by fragment length and a single genomic regions. Only fragments mapped after the initial 5566 bases in chromosome 6 between lengths 10 and 150 (inclusive) will be kept.
 ```
 DNAfrags::filter_fragments(file="myBAM.bam",min_frag_size=10,max_frag_size=150,chr=6,start_pos=5566)
 ```
 
-In this example reads in the BAM file called "myBAM.bam" are filtered by fragment length and a single genomic regions. Only fragments mapped between the bases 5566 and 1000000 (inclusive) in chromosome 6 between lengths 10 and 100 (inclusive) will be kept.
+In this example reads in the BAM file called "myBAM.bam" are filtered by fragment length and a single genomic regions. Only fragments mapped between the bases 5566 and 1000000 (inclusive) in chromosome 6 between lengths 10 and 150 (inclusive) will be kept.
 ```
 DNAfrags::filter_fragments(file="myBAM.bam",min_frag_size=10,max_frag_size=150,chr=6,start_pos=5566,end_pos=1000000)
 ```
 **Note:To deal with multiple genomic regions 2 solutions exist**
 
 
-In this example reads in the BAM file called "myBAM.bam" are filtered by fragment length in multiple genomic regions. Fragments of lengths 10 and 100 (inclusive) will be kept for specified regions.
+* **BED solution [Faster]**
+
+In this example reads in the BAM file called "myBAM.bam" are filtered by fragment length in multiple genomic regions. Fragments between lengths 10 and 150 (inclusive) will be kept for specified regions.
 ```
 DNAfrags::filter_fragments(file="myBAM.bam",min_frag_size=10,max_frag_size=150,bed="myBED.bed")
 ```
 
+* **Merge BAM solution**
 
-
-
+In this example reads in the BAM file called "myBAM.bam" are filtered by fragment length in multiple genomic regions. Fragments between lengths 10 and 150 (inclusive) will be kept for specified regions.
+```
+DNAfrags::filter_fragments(file="myBAM.bam",min_frag_size=10,max_frag_size=150,chr=6,start_pos=5566)
+DNAfrags::filter_fragments(file="myBAM.bam",min_frag_size=10,max_frag_size=150,chr=12,start_pos=123123,end_pos=1232131)
+```
+Then the BAM files for each genomic region are merged together into a single BAM file.
+```
+DNAfrags::merge_bam(out_bam="MyBAM",bam_dir=".")
+```
 
