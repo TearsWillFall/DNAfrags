@@ -1,6 +1,6 @@
 #' Plot DNA fragment length distribution
 #'
-#' This function takes a BAM file as input and plots the distribution of DNA fragments by their length
+#' This function takes a BAM file as input and plots the distribution of DNA fragments by their length.
 #'
 #'
 #' @param bin_path Path to samtools executable. Default path tools/samtools/samtools.
