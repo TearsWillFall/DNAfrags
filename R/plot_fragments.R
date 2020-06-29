@@ -9,7 +9,7 @@
 #' @export
 
 
-plot_fragments=function(path_bin="tools/samtools/samtools",file="",verbose=FALSE){
+plot_fragments=function(bin_path="tools/samtools/samtools",file="",verbose=FALSE){
   sample_name=get_sample_name(file)
   if(verbose){
     print(paste(paste0("./",path_bin),"view",file," | awk '{sub(\"^-\", \"\", $9);}'|sort | uniq -c >",paste0(sample_name,"_fragment_length.txt")))
