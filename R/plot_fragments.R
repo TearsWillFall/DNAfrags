@@ -67,7 +67,7 @@ plot_fragments=function(bin_path="tools/samtools/samtools",file="",verbose=FALSE
 
   best_solution=Reduce(function(x, y) merge(x, y, all=TRUE), best_solution)
   pdf(file=paste0(sample_name,".pdf"))
-  ggplot2:::ggplot(cnt, ggplot2::aes(x =frags,y=freq)) +
+  p=ggplot2:::ggplot(cnt, ggplot2::aes(x =frags,y=freq)) +
   ggplot2::geom_line(size=2) +
   ggplot2::scale_x_continuous(breaks=seq(min_frag_length,max_frag_length,30))+
   ggplot2::geom_vline(data=local_maximums[local_maximums$frags %in% unique(c(best_solution$V1,best_solution$V2,local_maximums[length(local_maximums$frags),])),],ggplot2::aes(xintercept=frags),lty="dashed",size=0.8)+
@@ -76,6 +76,7 @@ plot_fragments=function(bin_path="tools/samtools/samtools",file="",verbose=FALSE
   ggplot2::xlab("Fragment length (Pb)") +
   ggplot2::ylab("Counts")+
   ggplot2::theme_classic()
+  p
   dev.off()
 
 }
