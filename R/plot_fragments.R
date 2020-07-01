@@ -46,6 +46,26 @@ plot_fragments=function(bin_path="tools/samtools/samtools",file="",verbose=FALSE
   sorted_maximums=maximums_distance[maximums_distance$dif>=min_maximum_distance & maximums_distance$dif<=max_maximum_distance,]
   tmp_maximums=sorted_maximums
 
+  best_solution=c()
+  while (!dim(tmp_maximums)[1]==0){
+    solution=c()
+    solution=append(solution,list(data.frame(pos=row.names(tmp_maximums[1,]),V1=tmp_maximums[1,]$V1,V2=tmp_maximums[1,]$V2)))
+    tmp_maximums2=tmp_maximums
+    while(!dim(tmp_maximums2)[1]==0){
+      if (solution[[length(solution)]]$V2==tmp_maximums2[1,]$V1){
+        solution=append(solution,list(data.frame(pos=row.names(tmp_maximums2[1,]),V1=tmp_maximums2[1,]$V1,V2=tmp_maximums2[1,]$V2)))
+      }
+      tmp_maximums2=tmp_maximums2[-1,]
+    }
+    if (length(solution)>length(best_solution)){
+      best_solution=solution
+    }
+    tmp_maximums=tmp_maximums[-1,]
+  }
+
+
+
+
   best_solution=Reduce(function(x, y) merge(x, y, all=TRUE), best_solution)
 
 
