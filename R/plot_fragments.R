@@ -46,7 +46,7 @@ plot_fragments=function(bin_path="tools/samtools/samtools",file="",verbose=FALSE
   sorted_maximums=maximums_distance[maximums_distance$dif>=min_maximum_distance & maximums_distance$dif<=max_maximum_distance,]
   tmp_maximums=sorted_maximums
 
-  est_solution=Reduce(function(x, y) merge(x, y, all=TRUE), best_solution)
+  best_solution=Reduce(function(x, y) merge(x, y, all=TRUE), best_solution)
 
 
   ggplot2::ggplot(cnt, aes(x =frags,y=freq)) +
