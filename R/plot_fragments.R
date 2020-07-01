@@ -14,11 +14,13 @@
 #' @param min_maximum_distance Minimum distance between local maximum peaks to plot. Default 10
 #' @param max_maximum_distance Maximum distance between local maximum peaks  to plot. Default 12
 #' @param file Path to BAM file.
+#' @importFrom ggplot2 aes
 #' @export
 
 
 
-plot_fragments=function(bin_path="tools/samtools/samtools",file="",verbose=FALSE,min_frag_length=2,max_frag_length="",deviations=10,width_span=3,min_frgl_maximum=2,max_frgl_maximum=167,min_maximum_distance=10,max_maximum_distance=12){
+
+plot_fragments=function(bin_path="tools/samtools/samtools",file="",verbose=FALSE,min_frag_length=2,max_frag_length="",deviations=10,width_span=3,min_frgl_maximum=2,max_frgl_maximum=167,min_maximum_distance=10,max_maximum_distance=15){
   options(scipen=999)
   sample_name=get_sample_name(file)
   if(verbose){
@@ -31,14 +33,14 @@ plot_fragments=function(bin_path="tools/samtools/samtools",file="",verbose=FALSE
   data=read.table(paste0(sample_name,"_fragment_length.txt"))
   med=median(data$V1)
   mads=mad(data$V1)
-  med.mad=med*deviations+mads
+  med.mad=med+mads*deviations
 
   if (max_frag_length==""){
     max_frag_length=round(med.mad)
   }
 
   sub=data.frame(frags=data[data$V1>=min_frag_length &data$V1<=max_frag_length,])
-  cnt=dplyr::count(sub)
+  cnt=plyr:::count(sub)
   local_maximums=cnt[ggpmisc:::find_peaks(cnt$freq,span=width_span),]
   local_maximums=local_maximums[local_maximums$frags>=min_frgl_maximum & local_maximums$frags<=max_frgl_maximum,]
   maximums_distance=as.data.frame(t(combn(local_maximums$frags,2)))
@@ -65,8 +67,7 @@ plot_fragments=function(bin_path="tools/samtools/samtools",file="",verbose=FALSE
 
 
   best_solution=Reduce(function(x, y) merge(x, y, all=TRUE), best_solution)
-  print(best_solution)
-  ggplot2::ggplot(cnt, aes(x =frags,y=freq)) +
+  ggplot2:::ggplot(cnt, aes(x =frags,y=freq)) +
   ggplot2::geom_line(size=2) +
   ggplot2::scale_x_continuous(breaks=seq(min_frag_length,max_frag_size,30))+
   ggplot2::geom_vline(data=local_maximums[local_maximums$frags %in% unique(c(best_solution$V1,best_solution$V2,local_maximums[length(local_maximums$frags),])),],aes(xintercept=frags),lty="dashed",size=0.8)+

@@ -15,7 +15,7 @@ plot_fragments(
   min_frgl_maximum = 2,
   max_frgl_maximum = 167,
   min_maximum_distance = 10,
-  max_maximum_distance = 12
+  max_maximum_distance = 15
 )
 }
 \arguments{
