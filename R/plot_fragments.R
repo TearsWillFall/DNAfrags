@@ -64,11 +64,8 @@ plot_fragments=function(bin_path="tools/samtools/samtools",file="",verbose=FALSE
   }
 
 
-
-
   best_solution=Reduce(function(x, y) merge(x, y, all=TRUE), best_solution)
-
-
+  print(best_solution)
   ggplot2::ggplot(cnt, aes(x =frags,y=freq)) +
   ggplot2::geom_line(size=2) +
   ggplot2::scale_x_continuous(breaks=seq(min_frag_length,max_frag_size,30))+
