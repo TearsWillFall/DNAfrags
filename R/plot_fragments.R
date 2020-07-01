@@ -76,7 +76,7 @@ plot_fragments=function(bin_path="tools/samtools/samtools",file="",verbose=FALSE
   ggplot2::xlab("Fragment length (Pb)") +
   ggplot2::ylab("Counts")+
   ggplot2::theme_classic()
-  p
+  print(p)
   dev.off()
 
 }
