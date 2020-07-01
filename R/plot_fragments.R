@@ -19,13 +19,19 @@
 
 
 
-plot_fragments=function(bin_path="tools/samtools/samtools",file="",verbose=FALSE,min_frag_length=2,max_frag_length="",deviations=10,width_span=3,min_frgl_maximum=2,max_frgl_maximum=167,min_maximum_distance=10,max_maximum_distance=15){
+plot_fragments=function(bin_path="tools/samtools/samtools",file="",remove_unmapped=FALSE,verbose=FALSE,min_frag_length=2,max_frag_length="",deviations=10,width_span=3,min_frgl_maximum=2,max_frgl_maximum=167,min_maximum_distance=10,max_maximum_distance=15){
   options(scipen=999)
   sample_name=get_sample_name(file)
-  if(verbose){
-    print(paste(paste0("./",bin_path),"view -F 4 -f 2",file," | awk '{sub(\"^-\", \"\", $9); print $9}' >",paste0(sample_name,"_fragment_length.txt")))
+  flags=""
+  if (remove_unmapped){
+    flags="-F 4 -f 2"
   }
-  system(paste(paste0("./",bin_path),"view -F 4 -f 2",file," | awk '{sub(\"^-\", \"\", $9); print $9}' >",paste0(sample_name,"_fragment_length.txt")))
+
+
+  if(verbose){
+    print(paste(paste0("./",bin_path),"view",flags,file," | awk '{sub(\"^-\", \"\", $9); print $9}' >",paste0(sample_name,"_fragment_length.txt")))
+  }
+  system(paste(paste0("./",bin_path),"view",flags,file," | awk '{sub(\"^-\", \"\", $9); print $9}' >",paste0(sample_name,"_fragment_length.txt")))
 
   ### TODO add verbose
 
