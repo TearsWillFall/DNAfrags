@@ -69,7 +69,7 @@ plot_fragments=function(bin_path="tools/samtools/samtools",file="",verbose=FALSE
   best_solution=Reduce(function(x, y) merge(x, y, all=TRUE), best_solution)
   ggplot2:::ggplot(cnt, aes(x =frags,y=freq)) +
   ggplot2::geom_line(size=2) +
-  ggplot2::scale_x_continuous(breaks=seq(min_frag_length,max_frag_size,30))+
+  ggplot2::scale_x_continuous(breaks=seq(min_frag_length,max_frag_length,30))+
   ggplot2::geom_vline(data=local_maximums[local_maximums$frags %in% unique(c(best_solution$V1,best_solution$V2,local_maximums[length(local_maximums$frags),])),],aes(xintercept=frags),lty="dashed",size=0.8)+
   ggplot2::geom_vline(xintercept=167,col = "green",lty="dashed",size=1.2)+
   ggplot2::ggtitle("Fragment length distribution") +
