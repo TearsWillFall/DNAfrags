@@ -7,7 +7,15 @@
 plot_fragments(
   bin_path = "tools/samtools/samtools",
   file = "",
-  verbose = FALSE
+  verbose = FALSE,
+  min_frag_length = 2,
+  max_frag_length = "",
+  deviations = 10,
+  width_span = 3,
+  min_frgl_maximum = 2,
+  max_frgl_maximum = 167,
+  min_maximum_distance = 10,
+  max_maximum_distance = 12
 )
 }
 \arguments{
@@ -16,7 +24,23 @@ plot_fragments(
 \item{file}{Path to BAM file.}
 
 \item{verbose}{Enables progress messages. Default False.}
+
+\item{min_frag_length}{Minimum fragment length to plot. Default 2.}
+
+\item{max_frag_length}{Max fragment length to plot. When not provided it uses the rounded value of MEDIAN + DEVIATIONS*MEDIAN ABSOLUTE DEVIATION as cut point.}
+
+\item{deviations}{MEDIAN + DEVIATIONS*MEDIAN ABSOLUTE DEVIATION. Default 10}
+
+\item{width_span}{Window of width span at which a peak is greater than all other elements around it. Default 3}
+
+\item{min_frgl_maximum}{Minimum fragment length at which to plot maximums peaks. Default 2}
+
+\item{max_frgl_maximum}{Maximum fragment length at which to plot maximums peaks. Default 167}
+
+\item{min_maximum_distance}{Minimum distance between local maximum peaks to plot. Default 10}
+
+\item{max_maximum_distance}{Maximum distance between local maximum peaks  to plot. Default 12}
 }
 \description{
-This function takes a BAM file as input and plots the distribution of DNA fragments by their length.
+This function takes a BAM file as input and plots the length distribution of DNA fragments.
 }

@@ -18,7 +18,7 @@
 
 
 
-plot_fragments=function(bin_path="tools/samtools/samtools",file="",verbose=FALSE,min_frag_length=2,max_frag_length="",deviations=10,width_span=3,min_frgl_maximum=2,max_frag_length=167,min_maximum_distance=10,max_maximum_distance=12){
+plot_fragments=function(bin_path="tools/samtools/samtools",file="",verbose=FALSE,min_frag_length=2,max_frag_length="",deviations=10,width_span=3,min_frgl_maximum=2,max_frgl_maximum=167,min_maximum_distance=10,max_maximum_distance=12){
   options(scipen=999)
   sample_name=get_sample_name(file)
   if(verbose){
