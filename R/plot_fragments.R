@@ -14,7 +14,6 @@
 #' @param min_maximum_distance Minimum distance between local maximum peaks to plot. Default 10
 #' @param max_maximum_distance Maximum distance between local maximum peaks  to plot. Default 12
 #' @param file Path to BAM file.
-#' @importFrom ggplot2 aes
 #' @export
 
 
@@ -29,7 +28,7 @@ plot_fragments=function(bin_path="tools/samtools/samtools",file="",verbose=FALSE
   system(paste(paste0("./",bin_path),"view -F 4 -f 2",file," | awk '{sub(\"^-\", \"\", $9); print $9}' >",paste0(sample_name,"_fragment_length.txt")))
 
   ### TODO add verbose
-  pdf(file=paste0(sample_name,".pdf"))
+
   data=read.table(paste0(sample_name,"_fragment_length.txt"))
   med=median(data$V1)
   mads=mad(data$V1)
@@ -67,10 +66,11 @@ plot_fragments=function(bin_path="tools/samtools/samtools",file="",verbose=FALSE
 
 
   best_solution=Reduce(function(x, y) merge(x, y, all=TRUE), best_solution)
-  ggplot2:::ggplot(cnt, aes(x =frags,y=freq)) +
+  pdf(file=paste0(sample_name,".pdf"))
+  ggplot2:::ggplot(cnt, ggplot2::aes(x =frags,y=freq)) +
   ggplot2::geom_line(size=2) +
   ggplot2::scale_x_continuous(breaks=seq(min_frag_length,max_frag_length,30))+
-  ggplot2::geom_vline(data=local_maximums[local_maximums$frags %in% unique(c(best_solution$V1,best_solution$V2,local_maximums[length(local_maximums$frags),])),],aes(xintercept=frags),lty="dashed",size=0.8)+
+  ggplot2::geom_vline(data=local_maximums[local_maximums$frags %in% unique(c(best_solution$V1,best_solution$V2,local_maximums[length(local_maximums$frags),])),],ggplot2::aes(xintercept=frags),lty="dashed",size=0.8)+
   ggplot2::geom_vline(xintercept=167,col = "green",lty="dashed",size=1.2)+
   ggplot2::ggtitle("Fragment length distribution") +
   ggplot2::xlab("Fragment length (Pb)") +
