@@ -21,7 +21,8 @@
 
 
 plot_fragments=function(bin_path="tools/samtools/samtools",file="",remove_unmapped=FALSE,verbose=FALSE,min_frag_length=2,max_frag_length="",deviations=10,width_span=3,min_frgl_maximum=2,max_frgl_maximum=167,min_maximum_distance=10,max_maximum_distance=15){
-  options(scipen=999)
+  options(scipen=999,warn=-1)
+
   sample_name=get_sample_name(file)
   flags=""
   if (remove_unmapped){
@@ -78,15 +79,18 @@ plot_fragments=function(bin_path="tools/samtools/samtools",file="",remove_unmapp
 
   ## Generate log
   log_file=paste0(sample_name,"_fragment_length_distribution.txt")
-  cat(paste(Sys.time(),"\n"),file=log_file,append=FALSE)
+  cat(paste(Sys.time(),"\n\n"),file=log_file,append=FALSE)
   cat(paste("## PARAM \n"),file=log_file,append=TRUE)
   param=data.frame(bin_path=bin_path,file=file,verbose=verbose,remove_unmapped=remove_unmapped,min_frag_length=min_frag_length,max_frag_length=max_frag_length,deviations=deviations,width_span=width_span,min_frgl_maximum=min_frgl_maximum,max_frgl_maximum=max_frgl_maximum,min_maximum_distance=min_maximum_distance,max_maximum_distance=max_maximum_distance)
   write.table(param,file=log_file,append=TRUE,sep="\t",quote=FALSE,row.names=FALSE)
+  cat(paste("\n"),file=log_file,append=TRUE)
   info=data.frame(Median=med,Median_Absolute_Deviation=mads,Mode=data.cnt[data.cnt$freq==max(data.cnt$freq),]$V1,Min_Fragment_Size=min(data),Max_Fragment_Size=max(data),Mean=mean(as.numeric(data$V1)),Standard_Deviation=sd(as.numeric(data$V1)))
   cat(paste("## STATS \n"),file=log_file,append=TRUE)
   write.table(info,file=log_file,append=TRUE,sep="\t",quote=FALSE,row.names=FALSE)
+  cat(paste("\n"),file=log_file,append=TRUE)
   cat(paste("## PLOT_DATA \n"),file=log_file,append=TRUE)
   write.table(cnt,file=log_file,append=TRUE,sep="\t",quote=FALSE,row.names=FALSE)
+  cat(paste("\n"),file=log_file,append=TRUE)
   cat(paste("## LOCAL_MAXIMUMS \n"),file=log_file,append=TRUE)
   write.table(best_solution,file=log_file,append=TRUE,sep="\t",quote=FALSE,row.names=FALSE)
 
