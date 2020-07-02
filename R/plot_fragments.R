@@ -14,13 +14,14 @@
 #' @param max_frgl_maximum Maximum fragment length at which to plot maximums peaks. Default 167
 #' @param min_maximum_distance Minimum distance between local maximum peaks to plot. Default 10
 #' @param max_maximum_distance Maximum distance between local maximum peaks  to plot. Default 12
+#' @param vline Fragment length position/s where to draw a vertical. Default none
 #' @param file Path to BAM file.
 #' @export
 
 
 
 
-plot_fragments=function(bin_path="tools/samtools/samtools",file="",remove_unmapped=FALSE,verbose=FALSE,min_frag_length=2,max_frag_length="",deviations=10,width_span=3,min_frgl_maximum=2,max_frgl_maximum=167,min_maximum_distance=10,max_maximum_distance=15){
+plot_fragments=function(bin_path="tools/samtools/samtools",file="",remove_unmapped=FALSE,verbose=FALSE,min_frag_length=2,max_frag_length="",deviations=10,width_span=3,min_frgl_maximum=2,max_frgl_maximum=167,min_maximum_distance=10,max_maximum_distance=15,vline=""){
   options(scipen=999,warn=-1)
 
   sample_name=get_sample_name(file)
@@ -101,11 +102,13 @@ plot_fragments=function(bin_path="tools/samtools/samtools",file="",remove_unmapp
   ggplot2::geom_line(size=2) +
   ggplot2::scale_x_continuous(breaks=seq(min_frag_length,max_frag_length,30))+
   ggplot2::geom_vline(data=local_maximums[local_maximums$frags %in% unique(c(best_solution$start,best_solution$end)),],ggplot2::aes(xintercept=frags),lty="dashed",size=0.8)+
-  ggplot2::geom_vline(xintercept=167,col = "green",lty="dashed",size=1.2)+
-  ggplot2::ggtitle("Fragment length distribution") +
+  ggplot2::ggtitle(paste("Fragment length distribution for sample ",sample_name)) +
   ggplot2::xlab("Fragment length (Pb)") +
-  ggplot2::ylab("Counts")+
+  ggplot2::ylab("Counts") +
   ggplot2::theme_classic()
+  if (!vline==""){
+    p=p + ggplot2::geom_vline(xintercept=vline,col = "green",lty="dashed",size=1.2)
+  }
   print(p)
   dev.off()
 
