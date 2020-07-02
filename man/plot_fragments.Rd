@@ -7,6 +7,7 @@
 plot_fragments(
   bin_path = "tools/samtools/samtools",
   file = "",
+  remove_unmapped = FALSE,
   verbose = FALSE,
   min_frag_length = 2,
   max_frag_length = "",
@@ -22,6 +23,8 @@ plot_fragments(
 \item{bin_path}{Path to samtools executable. Default path tools/samtools/samtools.}
 
 \item{file}{Path to BAM file.}
+
+\item{remove_unmapped}{Removes unmapped reads and/or mates. Default false}
 
 \item{verbose}{Enables progress messages. Default False.}
 
