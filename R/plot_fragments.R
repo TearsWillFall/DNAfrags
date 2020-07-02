@@ -91,7 +91,7 @@ plot_fragments=function(bin_path="tools/samtools/samtools",file="",remove_unmapp
   write.table(best_solution,file=log_file,append=TRUE,sep="\t",quote=FALSE,row.names=FALSE)
 
   ## Generate plot
-  pdf(file=paste0(sample_name,time,"_fragment_length_distribution.pdf"))
+  pdf(file=paste0(sample_name,"_fragment_length_distribution.pdf"))
   p=ggplot2:::ggplot(cnt, ggplot2::aes(x =frags,y=freq)) +
   ggplot2::geom_line(size=2) +
   ggplot2::scale_x_continuous(breaks=seq(min_frag_length,max_frag_length,30))+
