@@ -58,11 +58,11 @@ plot_fragments=function(bin_path="tools/samtools/samtools",file="",remove_unmapp
   best_solution=c()
   while (!dim(tmp_maximums)[1]==0){
     solution=c()
-    solution=append(solution,list(data.frame(pos=row.names(tmp_maximums[1,]),start=tmp_maximums[1,]$V1,end=tmp_maximums[1,]$V2)))
+    solution=append(solution,list(data.frame(start=tmp_maximums[1,]$V1,end=tmp_maximums[1,]$V2)))
     tmp_maximums2=tmp_maximums
     while(!dim(tmp_maximums2)[1]==0){
       if (solution[[length(solution)]]$end==tmp_maximums2[1,]$V1){
-        solution=append(solution,list(data.frame(pos=row.names(tmp_maximums2[1,]),start=tmp_maximums2[1,]$V1,end=tmp_maximums2[1,]$V2)))
+        solution=append(solution,list(data.frame(start=tmp_maximums2[1,]$V1,end=tmp_maximums2[1,]$V2)))
       }
       tmp_maximums2=tmp_maximums2[-1,]
     }
@@ -76,6 +76,7 @@ plot_fragments=function(bin_path="tools/samtools/samtools",file="",remove_unmapp
   best_solution=Reduce(function(x, y) merge(x, y, all=TRUE), best_solution)
   best_solution=best_solution[order(best_solution$start),]
   best_solution=cbind(best_solution,dif=best_solution$end-best_solution$start)
+  best_solution=rbind(best_solution,c(best_solution[length(best_solution$dif),]$end,local_maximums[length(local_maximums$frags),]$frags,local_maximums[length(local_maximums$frags),]$frags-best_solution[length(best_solution$dif),]$end))
 
   ## Generate log
   log_file=paste0(sample_name,"_fragment_length_distribution.txt")
@@ -91,7 +92,7 @@ plot_fragments=function(bin_path="tools/samtools/samtools",file="",remove_unmapp
   cat(paste("## PLOT_DATA \n"),file=log_file,append=TRUE)
   write.table(cnt,file=log_file,append=TRUE,sep="\t",quote=FALSE,row.names=FALSE)
   cat(paste("\n"),file=log_file,append=TRUE)
-  cat(paste("## LOCAL_MAXIMUMS \n"),file=log_file,append=TRUE)
+  cat(paste("## MAXIMUMS \n"),file=log_file,append=TRUE)
   write.table(best_solution,file=log_file,append=TRUE,sep="\t",quote=FALSE,row.names=FALSE)
 
   ## Generate plot
@@ -99,7 +100,7 @@ plot_fragments=function(bin_path="tools/samtools/samtools",file="",remove_unmapp
   p=ggplot2:::ggplot(cnt, ggplot2::aes(x =frags,y=freq)) +
   ggplot2::geom_line(size=2) +
   ggplot2::scale_x_continuous(breaks=seq(min_frag_length,max_frag_length,30))+
-  ggplot2::geom_vline(data=local_maximums[local_maximums$frags %in% unique(c(best_solution$start,best_solution$end,local_maximums[length(local_maximums$frags),])),],ggplot2::aes(xintercept=frags),lty="dashed",size=0.8)+
+  ggplot2::geom_vline(data=local_maximums[local_maximums$frags %in% unique(c(best_solution$start,best_solution$end)),],ggplot2::aes(xintercept=frags),lty="dashed",size=0.8)+
   ggplot2::geom_vline(xintercept=167,col = "green",lty="dashed",size=1.2)+
   ggplot2::ggtitle("Fragment length distribution") +
   ggplot2::xlab("Fragment length (Pb)") +
