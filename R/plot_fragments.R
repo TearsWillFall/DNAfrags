@@ -10,12 +10,12 @@
 #' @param deviations MEDIAN + DEVIATIONS*MEDIAN ABSOLUTE DEVIATION. Default 10
 #' @param width_span Window of width span at which a peak is greater than all other elements around it. Default 3
 #' @param min_frgl_maximum Minimum fragment length at which to plot maximums peaks. Default 2
-#' @param remove_unmapped Removes unmapped reads and/or mates. Default false
+#' @param remove_unmapped Removes unmapped reads and/or mates. Only in BAM files. Default false
 #' @param max_frgl_maximum Maximum fragment length at which to plot maximums peaks. Default 167
 #' @param min_maximum_distance Minimum distance between local maximum peaks to plot. Default 10
 #' @param max_maximum_distance Maximum distance between local maximum peaks  to plot. Default 12
 #' @param vline Fragment length where to draw a vertical line. Default none
-#' @param file Path to BAM file.
+#' @param file Path to BAM or TXT file with fragment length.
 #' @export
 
 
@@ -25,20 +25,25 @@ plot_fragments=function(bin_path="tools/samtools/samtools",file="",remove_unmapp
   options(scipen=999,warn=-1)
 
   sample_name=get_sample_name(file)
-  flags=""
-  if (remove_unmapped){
-    flags="-F 4 -f 2"
+  if(grepl("*.bam",file)){
+
+    flags=""
+    if (remove_unmapped){
+      flags="-F 4 -f 2"
+    }
+
+
+    if(verbose){
+      print(paste(paste0("./",bin_path),"view",flags,file," | awk '{sub(\"^-\", \"\", $9); print $9}' >",paste0(sample_name,"_fragment_length.txt")))
+    }
+    system(paste(paste0("./",bin_path),"view",flags,file," | awk '{sub(\"^-\", \"\", $9); print $9}' >",paste0(sample_name,"_fragment_length.txt")))
+    data=read.table(paste0(sample_name,"_fragment_length.txt"))
+  }else{
+    data=read.table(file)
   }
-
-
-  if(verbose){
-    print(paste(paste0("./",bin_path),"view",flags,file," | awk '{sub(\"^-\", \"\", $9); print $9}' >",paste0(sample_name,"_fragment_length.txt")))
-  }
-  system(paste(paste0("./",bin_path),"view",flags,file," | awk '{sub(\"^-\", \"\", $9); print $9}' >",paste0(sample_name,"_fragment_length.txt")))
-
   ### TODO add verbose
 
-  data=read.table(paste0(sample_name,"_fragment_length.txt"))
+
   med=median(data$V1)
   mads=mad(data$V1)
   med.mad=med+mads*deviations
@@ -52,7 +57,7 @@ plot_fragments=function(bin_path="tools/samtools/samtools",file="",remove_unmapp
   cnt=sub
   local_maximums=cnt[ggpmisc:::find_peaks(cnt$freq,span=width_span),]
   if (max_frgl_maximum==""){
-    max_frgl_maximum=local_maximums[local_maximums$freq==max(local_maximums$freq),]$frags 
+    max_frgl_maximum=local_maximums[local_maximums$freq==max(local_maximums$freq),]$frags
   }
   local_maximums=local_maximums[local_maximums$frags>=min_frgl_maximum & local_maximums$frags<=max_frgl_maximum,]
   maximums_distance=as.data.frame(t(combn(local_maximums$frags,2)))
@@ -97,9 +102,10 @@ plot_fragments=function(bin_path="tools/samtools/samtools",file="",remove_unmapp
   cat(paste("## PLOT_DATA \n"),file=log_file,append=TRUE)
   write.table(cnt,file=log_file,append=TRUE,sep="\t",quote=FALSE,row.names=FALSE)
   cat(paste("\n"),file=log_file,append=TRUE)
-  cat(paste("## ALL_MAXIMUMS \n"),file=log_file,append=TRUE)
-  write.table(best_solution,file=log_file,append=TRUE,sep="\t",quote=FALSE,row.names=FALSE)
-  cat(paste("## MAXIMUMS \n"),file=log_file,append=TRUE)
+  cat(paste("## ALL_LOCAL_MAXIMUMS [",min_frgl_maximum,"-",max_frgl_maximum,"] \n"),file=log_file,append=TRUE)
+  write.table(local_maximums,file=log_file,append=TRUE,sep="\t",quote=FALSE,row.names=FALSE)
+  cat(paste("\n"),file=log_file,append=TRUE)
+  cat(paste("## BEST_LOCAL_MAXIMUMS \n"),file=log_file,append=TRUE)
   write.table(best_solution,file=log_file,append=TRUE,sep="\t",quote=FALSE,row.names=FALSE)
 
   ## Generate plot
