@@ -20,7 +20,7 @@
 
 
 
-plot_fragments_length=function(verbose=FALSE,min_frag_length=2,max_frag_length="",deviations=10,width_span=3,min_frgl_maximum=2,max_frgl_maximum="",min_maximum_distance=10,max_maximum_distance=15,vline=""){
+plot_fragments_length=function(file="",verbose=FALSE,min_frag_length=2,max_frag_length="",deviations=10,width_span=3,min_frgl_maximum=2,max_frgl_maximum="",min_maximum_distance=10,max_maximum_distance=15,vline=""){
   options(scipen=999,warn=-1)
 
 
@@ -28,7 +28,7 @@ plot_fragments_length=function(verbose=FALSE,min_frag_length=2,max_frag_length="
   sample_name=gsub("_fragment_length*","",file)
   data=read.table(file)
 
-  
+
   med=median(data$V1)
   mads=mad(data$V1)
   med.mad=med+mads*deviations
