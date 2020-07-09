@@ -1,49 +1,34 @@
 #' Plot DNA fragment length distribution
 #'
-#' This function takes a BAM file as input and plots the length distribution of DNA fragments.
+#' This function takes a file with fragment length as input and plots the length distribution of DNA fragments.
+#' The input file must not have headers and must contain the length of a single fragment per line.
 #'
 #'
-#' @param bin_path Path to samtools executable. Default path tools/samtools/samtools.
 #' @param verbose Enables progress messages. Default False.
 #' @param min_frag_length Minimum fragment length to plot. Default 2.
 #' @param max_frag_length Max fragment length to plot. When not provided it uses the rounded value of MEDIAN + DEVIATIONS*MEDIAN ABSOLUTE DEVIATION as cut point.
 #' @param deviations MEDIAN + DEVIATIONS*MEDIAN ABSOLUTE DEVIATION. Default 10
 #' @param width_span Window of width span at which a peak is greater than all other elements around it. Default 3
 #' @param min_frgl_maximum Minimum fragment length at which to plot maximums peaks. Default 2
-#' @param remove_unmapped Removes unmapped reads and/or mates. Only in BAM files. Default false
 #' @param max_frgl_maximum Maximum fragment length at which to plot maximums peaks. Default 167
 #' @param min_maximum_distance Minimum distance between local maximum peaks to plot. Default 10
 #' @param max_maximum_distance Maximum distance between local maximum peaks  to plot. Default 12
 #' @param vline Fragment length where to draw a vertical line. Default none
-#' @param file Path to BAM or TXT file with fragment length.
+#' @param file Path to file with fragment length.
 #' @export
 
 
 
 
-plot_fragments=function(bin_path="tools/samtools/samtools",file="",remove_unmapped=FALSE,verbose=FALSE,min_frag_length=2,max_frag_length="",deviations=10,width_span=3,min_frgl_maximum=2,max_frgl_maximum="",min_maximum_distance=10,max_maximum_distance=15,vline=""){
+plot_fragments_length=function(verbose=FALSE,min_frag_length=2,max_frag_length="",deviations=10,width_span=3,min_frgl_maximum=2,max_frgl_maximum="",min_maximum_distance=10,max_maximum_distance=15,vline=""){
   options(scipen=999,warn=-1)
 
-  sample_name=get_sample_name(file)
-  if(grepl("*.bam",file)){
 
-    flags=""
-    if (remove_unmapped){
-      flags="-F 4 -f 2"
-    }
-
-
-    if(verbose){
-      print(paste(paste0("./",bin_path),"view",flags,file," | awk '{sub(\"^-\", \"\", $9); print $9}' >",paste0(sample_name,"_fragment_length.txt")))
-    }
-    system(paste(paste0("./",bin_path),"view",flags,file," | awk '{sub(\"^-\", \"\", $9); print $9}' >",paste0(sample_name,"_fragment_length.txt")))
-    data=read.table(paste0(sample_name,"_fragment_length.txt"))
-  }else{
-    data=read.table(file)
-  }
   ### TODO add verbose
+  sample_name=gsub("_fragment_length*","",file)
+  data=read.table(file)
 
-
+  
   med=median(data$V1)
   mads=mad(data$V1)
   med.mad=med+mads*deviations
@@ -88,7 +73,8 @@ plot_fragments=function(bin_path="tools/samtools/samtools",file="",remove_unmapp
   best_solution=cbind(best_solution,dif=best_solution$end-best_solution$start)
   best_solution=rbind(best_solution,c(best_solution[length(best_solution$dif),]$end,local_maximums[length(local_maximums$frags),]$frags,local_maximums[length(local_maximums$frags),]$frags-best_solution[length(best_solution$dif),]$end))
 
-  ## Generate log
+  ## Generate logs
+
   log_file=paste0(sample_name,"_fragment_length_distribution.txt")
   cat(paste(Sys.time(),"\n\n"),file=log_file,append=FALSE)
   cat(paste("## PARAM \n"),file=log_file,append=TRUE)
@@ -109,6 +95,7 @@ plot_fragments=function(bin_path="tools/samtools/samtools",file="",remove_unmapp
   write.table(best_solution,file=log_file,append=TRUE,sep="\t",quote=FALSE,row.names=FALSE)
 
   ## Generate plot
+
   pdf(file=paste0(sample_name,"_fragment_length_distribution.pdf"))
   p=ggplot2:::ggplot(cnt, ggplot2::aes(x =frags,y=freq)) +
   ggplot2::geom_line(size=2) +
@@ -124,4 +111,33 @@ plot_fragments=function(bin_path="tools/samtools/samtools",file="",remove_unmapp
   print(p)
   dev.off()
 
+}
+
+
+#' Extract fragment length from a BAM file.
+#'
+#' This function takes a BAM file as input and outputs the fragment length of all reads in a TXT file.
+#'
+#'
+#' @param bin_path Path to samtools executable. Default path tools/samtools/samtools.
+#' @param verbose Enables progress messages. Default False.
+#' @param remove_unmapped Removes unmapped reads and/or mates. Only in BAM files. Default false
+#' @param bam Path to BAM.
+#' @export
+
+
+
+get_fragments_length=function(bin_path="tools/samtools/samtools",bam="",remove_unmapped=FALSE,verbose=FALSE){
+  sample_name=get_sample_name(file)
+  flags=""
+  if (remove_unmapped){
+    flags="-F 4 -f 2"
+  }
+
+
+  if(verbose){
+    print(paste(paste0("./",bin_path),"view",flags,file," | awk '{sub(\"^-\", \"\", $9); print $9}' >",paste0(sample_name,"_fragment_length.txt")))
+  }
+  system(paste(paste0("./",bin_path),"view",flags,file," | awk '{sub(\"^-\", \"\", $9); print $9}' >",paste0(sample_name,"_fragment_length.txt")))
+  data=read.table(paste0(sample_name,"_fragment_length.txt"))
 }
