@@ -52,7 +52,7 @@ plot_fragments=function(bin_path="tools/samtools/samtools",file="",remove_unmapp
   cnt=sub
   local_maximums=cnt[ggpmisc:::find_peaks(cnt$freq,span=width_span),]
   if (max_frgl_maximum==""){
-    max_frgl_maximum=local_maximums[local_maximums$freq==max(local_maximums$freq)]$frags
+    max_frgl_maximum=local_maximums[local_maximums$freq==max(local_maximums$freq)]$frags 
   }
   local_maximums=local_maximums[local_maximums$frags>=min_frgl_maximum & local_maximums$frags<=max_frgl_maximum,]
   maximums_distance=as.data.frame(t(combn(local_maximums$frags,2)))
