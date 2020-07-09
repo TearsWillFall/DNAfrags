@@ -8,7 +8,7 @@
 #' @param bin_path Path to fastQC executable. Default path tools/samtools/samtools.
 #' @param verbose Enables progress messages. Default False.
 #' @param min_frag_size Minimum fragment size to keep. Default 1.
-#' @param max_frag_size Maximum fragment size to keep. Default 10000000.
+#' @param max_frag_size Maximum fragment size to keep. Default 100000000.
 #' @param chr Chromosome to keep. Only single chromosomes. Default None.
 #' @param start_pos Starting position to search within a chromosome. Default 1
 #' @param end_pos Last position to search within a chromosome. Default None
@@ -16,7 +16,7 @@
 #' @export
 
 
-filter_fragments=function(bin_path="tools/samtools/samtools",file="",bed="",min_frag_size=0,max_frag_size=100000000,chr="",start_pos=1,end_pos="",verbose=FALSE){
+filter_fragments=function(bin_path="tools/samtools/samtools",file="",bed="",min_frag_size=0,max_frag_size=1000000000,chr="",start_pos=1,end_pos="",verbose=FALSE){
   options(scipen=999)
   position=""
   if(bed==""){

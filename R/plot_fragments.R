@@ -14,14 +14,14 @@
 #' @param max_frgl_maximum Maximum fragment length at which to plot maximums peaks. Default 167
 #' @param min_maximum_distance Minimum distance between local maximum peaks to plot. Default 10
 #' @param max_maximum_distance Maximum distance between local maximum peaks  to plot. Default 12
-#' @param vline Fragment length position/s where to draw a vertical. Default none
+#' @param vline Fragment length where to draw a vertical line. Default none
 #' @param file Path to BAM file.
 #' @export
 
 
 
 
-plot_fragments=function(bin_path="tools/samtools/samtools",file="",remove_unmapped=FALSE,verbose=FALSE,min_frag_length=2,max_frag_length="",deviations=10,width_span=3,min_frgl_maximum=2,max_frgl_maximum=167,min_maximum_distance=10,max_maximum_distance=15,vline=""){
+plot_fragments=function(bin_path="tools/samtools/samtools",file="",remove_unmapped=FALSE,verbose=FALSE,min_frag_length=2,max_frag_length="",deviations=10,width_span=3,min_frgl_maximum=2,max_frgl_maximum="",min_maximum_distance=10,max_maximum_distance=15,vline=""){
   options(scipen=999,warn=-1)
 
   sample_name=get_sample_name(file)
@@ -46,10 +46,14 @@ plot_fragments=function(bin_path="tools/samtools/samtools",file="",remove_unmapp
   if (max_frag_length==""){
     max_frag_length=round(med.mad)
   }
+
   data.cnt=plyr:::count(data)
   sub=data.frame(frags=data.cnt[data.cnt$V1>=min_frag_length & data.cnt$V1<=max_frag_length,]$V1,freq=data.cnt[data.cnt$V1>=min_frag_length & data.cnt$V1<=max_frag_length,]$freq)
   cnt=sub
   local_maximums=cnt[ggpmisc:::find_peaks(cnt$freq,span=width_span),]
+  if (max_frgl_maximum==""){
+    max_frag_length=local_maximums[,local_maximums$freq==max(local_maximums$freq)]$frags]
+  }
   local_maximums=local_maximums[local_maximums$frags>=min_frgl_maximum & local_maximums$frags<=max_frgl_maximum,]
   maximums_distance=as.data.frame(t(combn(local_maximums$frags,2)))
   maximums_distance=cbind(maximums_distance,dif=maximums_distance$V2-maximums_distance$V1)
@@ -93,6 +97,8 @@ plot_fragments=function(bin_path="tools/samtools/samtools",file="",remove_unmapp
   cat(paste("## PLOT_DATA \n"),file=log_file,append=TRUE)
   write.table(cnt,file=log_file,append=TRUE,sep="\t",quote=FALSE,row.names=FALSE)
   cat(paste("\n"),file=log_file,append=TRUE)
+  cat(paste("## ALL_MAXIMUMS \n"),file=log_file,append=TRUE)
+  write.table(best_solution,file=log_file,append=TRUE,sep="\t",quote=FALSE,row.names=FALSE)
   cat(paste("## MAXIMUMS \n"),file=log_file,append=TRUE)
   write.table(best_solution,file=log_file,append=TRUE,sep="\t",quote=FALSE,row.names=FALSE)
 
