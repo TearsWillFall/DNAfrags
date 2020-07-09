@@ -69,6 +69,7 @@ plot_fragments_length=function(file="",verbose=FALSE,min_frag_length=2,max_frag_
 
 
   best_solution=Reduce(function(x, y) merge(x, y, all=TRUE), best_solution)
+  print(best_solution)
   best_solution=best_solution[order(best_solution$start),]
   best_solution=cbind(best_solution,dif=best_solution$end-best_solution$start)
   best_solution=rbind(best_solution,c(best_solution[length(best_solution$dif),]$end,local_maximums[length(local_maximums$frags),]$frags,local_maximums[length(local_maximums$frags),]$frags-best_solution[length(best_solution$dif),]$end))
