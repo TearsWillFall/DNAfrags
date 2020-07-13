@@ -9,9 +9,10 @@
 #' @param quality Min quality of reads to be trimmed.
 #' @param first_base First base to keep. Trims everything before this base.
 #' @param last_base Last base to keep. Trims everything after this base.
+#' @param output_dir Path to the output directory.
 #' @export
 
-trim_fragments=function(bin_path="~/tools/bamUtil/bam",quality=33,first_base="",last_base="",file_R1="",file_R2=""){
+trim_fragments=function(bin_path="~/tools/bamUtil/bam",quality=33,first_base="",last_base="",file_R1="",file_R2="",output_dir=""){
   sep="/"
 
   if(output_dir==""){

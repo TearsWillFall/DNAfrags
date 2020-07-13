@@ -10,7 +10,8 @@ trim_fragments(
   first_base = "",
   last_base = "",
   file_R1 = "",
-  file_R2 = ""
+  file_R2 = "",
+  output_dir = ""
 )
 }
 \arguments{
@@ -23,6 +24,8 @@ trim_fragments(
 \item{file_R1}{Path to the input file with the sequence.}
 
 \item{file_R2}{\link{Optional} Path to the input with the reverse read sequence.}
+
+\item{output_dir}{Path to the output directory.}
 
 \item{verbose}{Enables progress messages. Default False.}
 }
