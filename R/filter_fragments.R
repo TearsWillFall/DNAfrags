@@ -5,7 +5,7 @@
 #'
 #'
 #' @param file Path to the input file.
-#' @param bin_path Path to fastQC executable. Default path ~/tools/samtools/samtools.
+#' @param bin_path Path to fastQC executable. Default path tools/samtools/samtools.
 #' @param verbose Enables progress messages. Default False.
 #' @param min_frag_size Minimum fragment size to keep. Default 1.
 #' @param max_frag_size Maximum fragment size to keep. Default 100000000.
