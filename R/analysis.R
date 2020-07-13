@@ -12,7 +12,7 @@
 #' @param output_dir Path to the output directory.
 #' @export
 
-trim_fragments=function(bin_path="~/tools/bamUtil/bam",quality=33,first_base="",last_base="",file_R1="",file_R2="",output_dir=""){
+trim_fragments=function(bin_path="~/tools/bamUtil/bam",quality=33,first_base="",last_base="",file_R1="",file_R2="",output_dir="",verbose=FALSE){
   sep="/"
 
   if(output_dir==""){
