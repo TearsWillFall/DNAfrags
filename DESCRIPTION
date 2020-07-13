@@ -13,7 +13,8 @@ Imports: plyr,
         ggplot2,
         ggpmisc
 License: GLP-3 + file LICENSE
-Remotes: git::https://github.com/TearsWillFall/BTools.git
+Remotes: git::https://github.com/TearsWillFall/BTools.git,
+         git::https://github.com/TearsWillFall/ULPwgs.git
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)

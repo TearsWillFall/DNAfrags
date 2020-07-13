@@ -39,6 +39,6 @@ plot_fragments_length(
 \item{vline}{Fragment length where to draw a vertical line. Default none}
 }
 \description{
-This function takes a file with fragment length as input and plots the length distribution of DNA fragments.
+This function takes a file with the fragment length as input and plots the length distribution of DNA fragments.
 The input file must not have headers and must contain the length of a single fragment per line.
 }

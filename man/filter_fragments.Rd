@@ -5,7 +5,7 @@
 \title{Filter DNA fragments in BAM files by length and position}
 \usage{
 filter_fragments(
-  bin_path = "tools/samtools/samtools",
+  bin_path = "~/tools/samtools/samtools",
   file = "",
   bed = "",
   min_frag_size = 0,
@@ -17,7 +17,7 @@ filter_fragments(
 )
 }
 \arguments{
-\item{bin_path}{Path to fastQC executable. Default path tools/samtools/samtools.}
+\item{bin_path}{Path to fastQC executable. Default path ~/tools/samtools/samtools.}
 
 \item{file}{Path to the input file.}
 

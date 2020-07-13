@@ -23,7 +23,7 @@ plot_fragments_length=function(file="",verbose=FALSE,min_frag_length=2,max_frag_
 
 
   ### TODO add verbose
-  sample_name=get_sample_name(gsub("_fragment_length*","",file))
+  sample_name=ULPwgs::get_sample_name(gsub("_fragment_length*","",file))
 
   data=read.table(file)
 
@@ -131,7 +131,7 @@ plot_fragments_length=function(file="",verbose=FALSE,min_frag_length=2,max_frag_
 
 
 get_fragments_length=function(bin_path="~/tools/samtools/samtools",bam="",remove_unmapped=FALSE,verbose=FALSE){
-  sample_name=get_sample_name(file)
+  sample_name=ULPwgs::get_sample_name(file)
   flags=""
   if (remove_unmapped){
     flags="-F 4 -f 2"
