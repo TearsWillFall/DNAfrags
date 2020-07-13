@@ -33,7 +33,7 @@ trim_fragments=function(bin_path="~/tools/bamUtil/bam",quality=33,first_base="",
       }
       system(paste(bin_path,paste0("-Q",quality),"-f",first_base,"-l",last_base,"-z -i",x,"-o",paste0(ULPwgs::get_sample_name(x),"_",y,".fastq.gz")))
     }
-  mapply(FUN=fun,x=c(file_R1,file_R2),y=c(1,2),MoreArgs=c(verbose,bin_path,quality,first_base,last_base))
+  mapply(FUN=fun,x=c(file_R1,file_R2),y=c(1,2),MoreArgs=list(verbose,bin_path,quality,first_base,last_base))
 
   }else{
   output_dir=paste0(output_dir,sep,sample_name,"_trimmed_",first_base,"-",last_base)
