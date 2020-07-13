@@ -5,7 +5,7 @@
 \title{Extract fragment length from a BAM file.}
 \usage{
 get_fragments_length(
-  bin_path = "tools/samtools/samtools",
+  bin_path = "~/tools/samtools/samtools",
   bam = "",
   remove_unmapped = FALSE,
   verbose = FALSE

@@ -5,19 +5,21 @@
 \title{Plot DNA fragment length distribution}
 \usage{
 plot_fragments_length(
+  file = "",
   verbose = FALSE,
   min_frag_length = 2,
   max_frag_length = "",
   deviations = 10,
   width_span = 3,
   min_frgl_maximum = 2,
-  max_frgl_maximum = "",
   min_maximum_distance = 10,
-  max_maximum_distance = 15,
+  max_maximum_distance = 11,
   vline = ""
 )
 }
 \arguments{
+\item{file}{Path to file with fragment length.}
+
 \item{verbose}{Enables progress messages. Default False.}
 
 \item{min_frag_length}{Minimum fragment length to plot. Default 2.}
@@ -30,15 +32,11 @@ plot_fragments_length(
 
 \item{min_frgl_maximum}{Minimum fragment length at which to plot maximums peaks. Default 2}
 
-\item{max_frgl_maximum}{Maximum fragment length at which to plot maximums peaks. Default 167}
-
 \item{min_maximum_distance}{Minimum distance between local maximum peaks to plot. Default 10}
 
 \item{max_maximum_distance}{Maximum distance between local maximum peaks  to plot. Default 12}
 
 \item{vline}{Fragment length where to draw a vertical line. Default none}
-
-\item{file}{Path to file with fragment length.}
 }
 \description{
 This function takes a file with fragment length as input and plots the length distribution of DNA fragments.
