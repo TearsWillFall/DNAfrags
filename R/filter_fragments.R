@@ -16,7 +16,7 @@
 #' @export
 
 
-filter_fragments=function(bin_path="~/tools/samtools/samtools",file="",bed="",min_frag_size=0,max_frag_size=1000000000,chr="",start_pos=1,end_pos="",verbose=FALSE){
+filter_fragments=function(bin_path="tools/samtools/samtools",file="",bed="",min_frag_size=0,max_frag_size=1000000000,chr="",start_pos=1,end_pos="",verbose=FALSE){
   options(scipen=999)
   position=""
   if(bed==""){
@@ -64,7 +64,7 @@ filter_fragments=function(bin_path="~/tools/samtools/samtools",file="",bed="",mi
 #' @export
 
 
-merge_bam=function(bin_path="~/tools/samtools/samtools",out_bam="",bam_dir="",verbose=FALSE){
+merge_bam=function(bin_path="tools/samtools/samtools",out_bam="",bam_dir="",verbose=FALSE){
     if(verbose){
       print(paste(bin_path,"merge",paste0(out_bam,".MERGED.bam"), paste0(bam_dir,"/*.bam")))
     }
