@@ -119,4 +119,23 @@ DNAfrags::merge_bam(out_bam="MyBAM",bam_dir=".")
 ```
 
 ### VISUALIZATION:
+
 ![Visualizing fragment length distribution with DNAfrags](https://github.com/TearsWillFall/DNAfrags/blob/master/Graph2.png?raw=true)
+
+**Examples:**
+
+
+In this example, the fragment length from all the reads in "myBAM.bam" are extracted and saved as \*\_fragment\_length.txt
+```
+DNAfrags::get_fragments_length(file="myBAM.bam")
+```
+Once the fragment length is extracted, it can be plotted using the `plot_fragments_length`, as seen below.
+```
+DNAfrags::plot_fragments_length(file="mybam_fragment_length.txt")
+```
+
+
+
+
+
+
