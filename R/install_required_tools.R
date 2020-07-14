@@ -7,7 +7,6 @@
 #' or at https://github.com/TearsWillFall/DNAfrags.
 #' @export
 
-
 install_required_tools=function(){
-  BTools::install_tools(whitelist=c("samtools"))
+  BTools::install_tools(whitelist=c("samtools,bamUtil"))
 }

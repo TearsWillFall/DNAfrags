@@ -8,7 +8,7 @@
 #' @param bin_path Path to fastQC executable. Default path tools/samtools/samtools.
 #' @param verbose Enables progress messages. Default False.
 #' @param min_frag_size Minimum fragment size to keep. Default 1.
-#' @param max_frag_size Maximum fragment size to keep. Default 10000000.
+#' @param max_frag_size Maximum fragment size to keep. Default 100000000.
 #' @param chr Chromosome to keep. Only single chromosomes. Default None.
 #' @param start_pos Starting position to search within a chromosome. Default 1
 #' @param end_pos Last position to search within a chromosome. Default None
@@ -16,7 +16,7 @@
 #' @export
 
 
-filter_fragments=function(bin_path="tools/samtools/samtools",file="",bed="",min_frag_size=0,max_frag_size=100000000,chr="",start_pos=1,end_pos="",verbose=FALSE){
+filter_fragments=function(bin_path="tools/samtools/samtools",file="",bed="",min_frag_size=0,max_frag_size=1000000000,chr="",start_pos=1,end_pos="",verbose=FALSE){
   options(scipen=999)
   position=""
   if(bed==""){
@@ -30,23 +30,23 @@ filter_fragments=function(bin_path="tools/samtools/samtools",file="",bed="",min_
 
       }
       if (verbose){
-        print(paste(paste0("./",bin_path),"view -h",file,position," | \ awk 'substr($0,1,1)==\"@\""," || ($9>=",min_frag_size,"&& $9<=",max_frag_size,") ||", "($9<=-",min_frag_size,"&& $9>=",max_frag_size,")' | \ samtools view -b >",paste0(get_sample_name(file),"_",min_frag_size,"-",max_frag_size,"_",position,".bam")))
+        print(paste(bin_path,"view -h",file,position," | \ awk 'substr($0,1,1)==\"@\""," || ($9>=",min_frag_size,"&& $9<=",max_frag_size,") ||", "($9<=-",min_frag_size,"&& $9>=",max_frag_size,")' | \ samtools view -b >",paste0(ULPwgs::get_sample_name(file),"_",min_frag_size,"-",max_frag_size,"_",position,".bam")))
       }
-      system(paste(paste0("./",bin_path),"view -h",file,position," | \ awk 'substr($0,1,1)==\"@\""," || ($9>=",min_frag_size,"&& $9<=",max_frag_size,") ||", "($9<=-",min_frag_size,"&& $9>=",max_frag_size,")' | \ samtools view -b >",paste0(get_sample_name(file),"_",min_frag_size,"-",max_frag_size,"_",position,".bam")))
+      system(paste(bin_path,"view -h",file,position," | \ awk 'substr($0,1,1)==\"@\""," || ($9>=",min_frag_size,"&& $9<=",max_frag_size,") ||", "($9<=-",min_frag_size,"&& $9>=",max_frag_size,")' | \ samtools view -b >",paste0(ULPwgs::get_sample_name(file),"_",min_frag_size,"-",max_frag_size,"_",position,".bam")))
     }else{
       if (verbose){
-        print(paste(paste0("./",bin_path),"view -h",file,position," | \ awk 'substr($0,1,1)==\"@\""," || ($9>=",min_frag_size,"&& $9<=",max_frag_size,") ||", "($9<=-",min_frag_size,"&& $9>=",max_frag_size,")' | \ samtools view -b >",paste0(get_sample_name(file),"_",min_frag_size,"-",max_frag_size,".bam")))
+        print(paste(bin_path,"view -h",file,position," | \ awk 'substr($0,1,1)==\"@\""," || ($9>=",min_frag_size,"&& $9<=",max_frag_size,") ||", "($9<=-",min_frag_size,"&& $9>=",max_frag_size,")' | \ samtools view -b >",paste0(ULPwgs::get_sample_name(file),"_",min_frag_size,"-",max_frag_size,".bam")))
 
       }
-      system(paste(paste0("./",bin_path),"view -h",file,position," | \ awk 'substr($0,1,1)==\"@\""," || ($9>=",min_frag_size,"&& $9<=",max_frag_size,") ||", "($9<=-",min_frag_size,"&& $9>=",max_frag_size,")' | \ samtools view -b >",paste0(get_sample_name(file),"_",min_frag_size,"-",max_frag_size,".bam")))
+      system(paste(bin_path,"view -h",file,position," | \ awk 'substr($0,1,1)==\"@\""," || ($9>=",min_frag_size,"&& $9<=",max_frag_size,") ||", "($9<=-",min_frag_size,"&& $9>=",max_frag_size,")' | \ samtools view -b >",paste0(ULPwgs::get_sample_name(file),"_",min_frag_size,"-",max_frag_size,".bam")))
     }
 
   }else{
     if (verbose){
-      print(paste(paste0("./",bin_path),"view -h -L",bed,file," | \ awk 'substr($0,1,1)==\"@\""," || ($9>=",min_frag_size,"&& $9<=",max_frag_size,") ||", "($9<=-",min_frag_size,"&& $9>=",max_frag_size,")' | \ samtools view -b >",paste0(get_sample_name(file),"_",min_frag_size,"-",max_frag_size,"_multiple-pos.bam")))
+      print(paste(bin_path,"view -h -L",bed,file," | \ awk 'substr($0,1,1)==\"@\""," || ($9>=",min_frag_size,"&& $9<=",max_frag_size,") ||", "($9<=-",min_frag_size,"&& $9>=",max_frag_size,")' | \ samtools view -b >",paste0(ULPwgs::get_sample_name(file),"_",min_frag_size,"-",max_frag_size,"_multiple-pos.bam")))
 
     }
-    system(paste(paste0("./",bin_path),"view -h -L",bed,file," | \ awk 'substr($0,1,1)==\"@\""," || ($9>=",min_frag_size,"&& $9<=",max_frag_size,") ||", "($9<=-",min_frag_size,"&& $9>=",max_frag_size,")' | \ samtools view -b >",paste0(get_sample_name(file),"_",min_frag_size,"-",max_frag_size,"_multiple-pos.bam")))
+    system(paste(bin_path,"view -h -L",bed,file," | \ awk 'substr($0,1,1)==\"@\""," || ($9>=",min_frag_size,"&& $9<=",max_frag_size,") ||", "($9<=-",min_frag_size,"&& $9>=",max_frag_size,")' | \ samtools view -b >",paste0(ULPwgs::get_sample_name(file),"_",min_frag_size,"-",max_frag_size,"_multiple-pos.bam")))
   }
 
 
@@ -66,7 +66,7 @@ filter_fragments=function(bin_path="tools/samtools/samtools",file="",bed="",min_
 
 merge_bam=function(bin_path="tools/samtools/samtools",out_bam="",bam_dir="",verbose=FALSE){
     if(verbose){
-      print(paste(paste0("./",bin_path),"merge",paste0(out_bam,".MERGED.bam"), paste0(bam_dir,"/*.bam")))
+      print(paste(bin_path,"merge",paste0(out_bam,".MERGED.bam"), paste0(bam_dir,"/*.bam")))
     }
-    system(paste(paste0("./",bin_path),"merge",paste0(out_bam,".MERGED.bam"), paste0(bam_dir,"/*.bam")))
+    system(paste(bin_path,"merge",paste0(out_bam,".MERGED.bam"), paste0(bam_dir,"/*.bam")))
   }

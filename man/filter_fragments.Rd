@@ -5,11 +5,11 @@
 \title{Filter DNA fragments in BAM files by length and position}
 \usage{
 filter_fragments(
-  bin_path = "tools/samtools/samtools",
+  bin_path = "~/tools/samtools/samtools",
   file = "",
   bed = "",
   min_frag_size = 0,
-  max_frag_size = 1e+08,
+  max_frag_size = 1e+09,
   chr = "",
   start_pos = 1,
   end_pos = "",
@@ -17,7 +17,7 @@ filter_fragments(
 )
 }
 \arguments{
-\item{bin_path}{Path to fastQC executable. Default path tools/samtools/samtools.}
+\item{bin_path}{Path to fastQC executable. Default path ~/tools/samtools/samtools.}
 
 \item{file}{Path to the input file.}
 
@@ -25,7 +25,7 @@ filter_fragments(
 
 \item{min_frag_size}{Minimum fragment size to keep. Default 1.}
 
-\item{max_frag_size}{Maximum fragment size to keep. Default 10000000.}
+\item{max_frag_size}{Maximum fragment size to keep. Default 100000000.}
 
 \item{chr}{Chromosome to keep. Only single chromosomes. Default None.}
 
