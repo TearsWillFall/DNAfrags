@@ -116,4 +116,4 @@ Then the BAM files for each genomic region are merged together into a single BAM
 ```
 DNAfrags::merge_bam(out_bam="MyBAM",bam_dir=".")
 ```
-
+![Visualizing fragment length distribution with DNAfrags](https://github.com/TearsWillFall/DNAfrags/blob/master/Graph2.png?raw=true)
