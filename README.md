@@ -69,6 +69,7 @@ library("DNAfrags")
 install_required_tools() 
 ```
 ## 4. Usage
+### FILTERING:
 
 ![Bioinformatic Workflow example of DNAfrags](https://github.com/TearsWillFall/DNAfrags/blob/master/Graph.png?raw=true)
 
@@ -116,4 +117,6 @@ Then the BAM files for each genomic region are merged together into a single BAM
 ```
 DNAfrags::merge_bam(out_bam="MyBAM",bam_dir=".")
 ```
+
+### VISUALIZATION:
 ![Visualizing fragment length distribution with DNAfrags](https://github.com/TearsWillFall/DNAfrags/blob/master/Graph2.png?raw=true)
