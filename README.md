@@ -133,7 +133,7 @@ Once the fragment length is extracted, it can be plotted using the `plot_fragmen
 ```
 DNAfrags::plot_fragments_length(file="mybam_fragment_length.txt")
 ```
-
+![Trimming fragments with DNAfrags](https://github.com/TearsWillFall/DNAfrags/blob/master/Graph3.png?raw=true)
 
 
 
