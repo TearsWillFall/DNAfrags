@@ -131,7 +131,7 @@ plot_fragments_length=function(file="",verbose=FALSE,min_frag_length=2,max_frag_
 
 
 get_fragments_length=function(bin_path="tools/samtools/samtools",bam="",remove_unmapped=FALSE,verbose=FALSE){
-  sample_name=ULPwgs::get_sample_name(file)
+  sample_name=ULPwgs::get_sample_name(bam)
   flags=""
   if (remove_unmapped){
     flags="-F 4 -f 2"
@@ -139,8 +139,8 @@ get_fragments_length=function(bin_path="tools/samtools/samtools",bam="",remove_u
 
 
   if(verbose){
-    print(paste(bin_path,"view",flags,file," | awk '{sub(\"^-\", \"\", $9); print $9}' >",paste0(sample_name,"_fragment_length.txt")))
+    print(paste(bin_path,"view",flags,bam," | awk '{sub(\"^-\", \"\", $9); print $9}' >",paste0(sample_name,"_fragment_length.txt")))
   }
-  system(paste(bin_path,"view",flags,file," | awk '{sub(\"^-\", \"\", $9); print $9}' >",paste0(sample_name,"_fragment_length.txt")))
+  system(paste(bin_path,"view",flags,bam," | awk '{sub(\"^-\", \"\", $9); print $9}' >",paste0(sample_name,"_fragment_length.txt")))
   data=read.table(paste0(sample_name,"_fragment_length.txt"))
 }
