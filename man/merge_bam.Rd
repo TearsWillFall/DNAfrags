@@ -5,7 +5,7 @@
 \title{Merge BAM files in directory}
 \usage{
 merge_bam(
-  bin_path = "~/tools/samtools/samtools",
+  bin_path = "tools/samtools/samtools",
   out_bam = "",
   bam_dir = "",
   verbose = FALSE
