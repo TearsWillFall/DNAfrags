@@ -8,5 +8,5 @@
 #' @export
 
 install_required_tools=function(){
-  BTools::install_tools(whitelist=c("samtools,bamUtil"))
+  BTools::install_tools(whitelist=c("samtools,fastx_toolkit"))
 }
