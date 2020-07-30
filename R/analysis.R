@@ -38,7 +38,7 @@ trim_fragments=function(bin_path="tools/fastx_toolkit/bin/fastx_trimmer",quality
   mapply(FUN=fun,x=c(file_R1,file_R2),MoreArgs=list(verbose,bin_path,quality,first_base,last_base,output_dir))
 
   }else{
-  sample_name=unlist(strsplit(sample_name),"_")[1]
+  sample_name=unlist(strsplit(sample_name,"_"))[1]
   output_dir=paste0(output_dir,sep,,"_trimmed_",first_base,"-",last_base)
   if(!dir.exists(output_dir)){
     dir.create(output_dir)
