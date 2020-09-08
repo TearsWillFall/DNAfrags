@@ -162,7 +162,7 @@ get_fragments_length=function(bin_path="tools/samtools/samtools",bam="",remove_u
 #' @export
 
 
-devtools::document()
+
 
 get_fragment_length_bed=function(bin_path="tools/samtools/samtools",bam="",bed="",max_frag_length=1000,mapq=10,threads=1,output_dir="",verbose=FALSE){
 
