@@ -227,7 +227,7 @@ df_list=pbapply::pbapply(X=data,1,FUN=FUN,bin_path=bin_path,bam=bam,mapq=mapq,aw
 max_frag_length=max_frag_length,awk_file_stats=awk_file_stats,verbose=verbose,cl=cl)
 on.exit(parallel::stopCluster(cl))
 
-df=dplyr::bind_rows(df_list)
+df=dplyr::bind_rows(df_list) %>% dplyr::arrange(Chr,Region_Start,Region_End)
 
 sep="/"
 if(output_dir==""){
