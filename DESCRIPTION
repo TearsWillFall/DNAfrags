@@ -8,7 +8,7 @@ Authors@R:
            email = "osvaldas.v@um.es")
 Description: This program allows filter DNA fragments in BAM files by length and location by using the SAMTOOLS software.
 Depends:
-    R (>= 4.0.0)
+    R (>= 3.6.0)
 Imports: plyr,
         ggplot2,
         ggpmisc
