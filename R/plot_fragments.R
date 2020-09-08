@@ -161,8 +161,8 @@ get_fragments_length=function(bin_path="tools/samtools/samtools",bam="",remove_u
 #' @param output_dir Directory to output results.
 #' @export
 
-
-
+(bam="/home/osvaldas/Work/New/SRR11742859_SORTED.RMDUP.SORTED.BAM/SRR11742859.SORTED.RMDUP.SORTED.bam",bed="/home/osvaldas/TESTS/TranscriptionFactorProfiling/Ref/GTRD_1000sites/Androgen.Top1000sites.bed",threads=4
+bin_path="~/Work/New/tools/samtools/samtools"
 
 get_fragment_length_bed=function(bin_path="tools/samtools/samtools",bam="",bed="",max_frag_length=1000,mapq=10,threads=1,output_dir="",verbose=FALSE){
 
@@ -182,7 +182,7 @@ get_fragment_length_bed=function(bin_path="tools/samtools/samtools",bam="",bed="
 
 
   data=data.frame(chr=ref_data[,1],r_start=(ref_data[,2]+1),r_end=(ref_data[,3]+1)) %>% dplyr::mutate(f_start=r_start-max_frag_length,f_end=r_end+max_frag_length,r_id=ref_data[,4]) %>% dplyr::filter(!grepl("_",chr))
-  FUN=function(x,bin_path,bam,mapq,awk_file_filter,awk_file_stats,max_frag_length){
+  FUN=function(x,bin_path,bam,mapq,awk_file_filter,awk_file_stats,max_frag_length,verbose){
   region_data=data.frame(t(x))
   position=""
   if (!region_data$chr==""){
@@ -225,7 +225,7 @@ if(verbose){
 tictoc::tic("Analysis time: ")
 cl=parallel::makeCluster(threads)
 df_list=pbapply::pbapply(X=data,1,FUN=FUN,bin_path=bin_path,bam=bam,mapq=mapq,awk_file_filter=awk_file_filter,
-max_frag_length=max_frag_length,awk_file_stats=awk_file_stats,cl=cl)
+max_frag_length=max_frag_length,awk_file_stats=awk_file_stats,verbose=verbose,cl=cl)
 on.exit(parallel::stopCluster(cl))
 
 df=dplyr::bind_rows(df_list)
