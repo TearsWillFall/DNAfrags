@@ -234,7 +234,7 @@ if(output_dir==""){
   sep=""
 }
 
-out_file=paste0(output_dir,"/",sample_name,".fragment_length_regions.txt")
+out_file=paste0(output_dir,sep,sample_name,".fragment_length_regions.txt")
 
 write.table(df,quote=FALSE,row.names=FALSE,out_file)
 tictoc::toc()
