@@ -11,6 +11,7 @@ get_fragment_length_bed(
   max_frag_length = 1000,
   mapq = 10,
   threads = 1,
+  output_dir = "",
   verbose = FALSE
 )
 }
@@ -26,6 +27,8 @@ get_fragment_length_bed(
 \item{mapq}{Minimum MapQ of the reads to keep. Default 10.}
 
 \item{threads}{Number of cores. Default 1}
+
+\item{output_dir}{Directory to output results.}
 
 \item{verbose}{Enables progress messages. Default False.}
 }

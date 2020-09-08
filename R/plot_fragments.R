@@ -158,12 +158,13 @@ get_fragments_length=function(bin_path="tools/samtools/samtools",bam="",remove_u
 #' @param max_frag_length Maximum fragment length to keep. Default 1000.
 #' @param mapq Minimum MapQ of the reads to keep. Default 10.
 #' @param threads Number of cores. Default 1
+#' @param output_dir Directory to output results.
 #' @export
 
 
+devtools::document()
 
-
-get_fragment_length_bed=function(bin_path="tools/samtools/samtools",bam="",bed="",max_frag_length=1000,mapq=10,threads=1,verbose=FALSE){
+get_fragment_length_bed=function(bin_path="tools/samtools/samtools",bam="",bed="",max_frag_length=1000,mapq=10,threads=1,output_dir="",verbose=FALSE){
 
 
   sample_name=ULPwgs::get_sample_name(bam)
