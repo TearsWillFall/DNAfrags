@@ -144,3 +144,80 @@ get_fragments_length=function(bin_path="tools/samtools/samtools",bam="",remove_u
   system(paste(bin_path,"view",flags,bam," | awk '{sub(\"^-\", \"\", $9); print $9}' >",paste0(sample_name,"_fragment_length.txt")))
   data=read.table(paste0(sample_name,"_fragment_length.txt"))
 }
+
+get_fragment_length_bed=function(bin_path="tools/samtools/samtools",bam="",bed="",max_frag_length=1000,mapq=10,threads=1,verbose=FALSE){
+
+
+  sample_name=ULPwgs::get_sample_name(bam)
+
+  awk_file_filter=system.file("shell", "filter.awk", package = "DNAfrags")
+  awk_file_stats=system.file("shell", "stats.awk", package = "DNAfrags")
+
+  chr_check=system(paste(bin_path,"view",bam," | head -n 1 | awk -F \"\t\" '{print $3}'"),intern=TRUE)
+
+  ref_data=read.table(bed,comment.char="")
+
+  if (!grepl("chr",chr_check)){
+    ref_data[,1]=gsub("chr","",ref_data[,1])
+  }
+
+
+
+  data=data.frame(chr=ref_data[,1],r_start=(ref_data[,2]+1),r_end=(ref_data[,3]+1)) %>% dplyr::mutate(f_start=r_start-max_frag_length,f_end=r_end+max_frag_length,r_id=ref_data[,4]) %>% dplyr::filter(!grepl("_",chr))
+  FUN=function(x,bin_path,bam,mapq,awk_file_filter,awk_file_stats,max_frag_length){
+  region_data=data.frame(t(x))
+  position=""
+  if (!region_data$chr==""){
+    if (!grepl("chr",region_data$chr)){
+      position=paste0("chr",region_data$chr)}
+      else{
+        position=region_data$chr
+      }
+    if (!region_data$f_start==1){
+      position=paste0(position,":",as.numeric(region_data$f_start))
+      if (!region_data$f_end==""){
+        position=paste0(position,"-",as.numeric(region_data$f_end))
+        }
+      }
+    }
+if(verbose){
+  print(paste0("{ ",bin_path," view ",bam," -f 99 ", position," | awk -v MIN_MAPQ=",mapq,
+  " -v MAX_FRAGMENT_LEN=",max_frag_length," -v CHR=",region_data$chr," -v R_START=",as.numeric(region_data$r_start),
+  " -v R_END=",as.numeric(region_data$r_end)," -v R_ID=",region_data$r_id," -f ", awk_file_filter," ; ",bin_path," view ",bam," -f 163 ", position," | awk -v MIN_MAPQ=",mapq,
+  " -v MAX_FRAGMENT_LEN=",max_frag_length," -v CHR=",region_data$chr," -v R_START=",as.numeric(region_data$r_start),
+  " -v R_END=",as.numeric(region_data$r_end)," -v R_ID=",region_data$r_id," -f ", awk_file_filter,"; } | sort -k9 -n | awk -v MIN_MAPQ=",mapq,
+  " -v MAX_FRAGMENT_LEN=",max_frag_length," -v CHR=",region_data$chr," -v R_START=",as.numeric(region_data$r_start),
+  " -v R_END=",as.numeric(region_data$r_end)," -v R_ID=",region_data$r_id," -f ", awk_file_stats))
+}
+
+
+  fragment_data=read.csv(text=system(paste0("{ ",bin_path," view ",bam," -f 99 ", position," | awk -v MIN_MAPQ=",mapq,
+  " -v MAX_FRAGMENT_LEN=",max_frag_length," -v CHR=",region_data$chr," -v R_START=",as.numeric(region_data$r_start),
+  " -v R_END=",as.numeric(region_data$r_end)," -v R_ID=",region_data$r_id," -f ", awk_file_filter," ; ",bin_path," view ",bam," -f 163 ", position," | awk -v MIN_MAPQ=",mapq,
+  " -v MAX_FRAGMENT_LEN=",max_frag_length," -v CHR=",region_data$chr," -v R_START=",as.numeric(region_data$r_start),
+  " -v R_END=",as.numeric(region_data$r_end)," -v R_ID=",region_data$r_id," -f ", awk_file_filter,"; } | sort -k9 -n | awk -v MIN_MAPQ=",mapq,
+  " -v MAX_FRAGMENT_LEN=",max_frag_length," -v CHR=",region_data$chr," -v R_START=",as.numeric(region_data$r_start),
+  " -v R_END=",as.numeric(region_data$r_end)," -v R_ID=",region_data$r_id," -f ", awk_file_stats),intern=TRUE),header=FALSE,sep="\t")
+  names(fragment_data)=c("Region_ID","Chr","Region_Start","Region_End","Number_of_Reads","Frag_len_med","Frag_len_avg","Frag_len_sd","Frag_len_distr")
+
+
+  return(fragment_data)
+}
+
+tictoc::tic("Analysis time: ")
+cl=parallel::makeCluster(threads)
+df_list=pbapply::pbapply(X=data,1,FUN=FUN,bin_path=bin_path,bam=bam,mapq=mapq,awk_file_filter=awk_file_filter,
+max_frag_length=max_frag_length,awk_file_stats=awk_file_stats,cl=cl)
+on.exit(parallel::stopCluster(cl))
+
+df=dplyr::bind_rows(df_list)
+
+if(output_dir==""){
+  sep=""
+}
+
+out_file=paste0(output_dir,"/",sample_name,".fragment_length_regions.txt")
+
+write.table(df,quote=FALSE,row.names=FALSE,out_file)
+tictoc::toc()
+}
