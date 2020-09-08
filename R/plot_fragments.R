@@ -230,6 +230,7 @@ on.exit(parallel::stopCluster(cl))
 
 df=dplyr::bind_rows(df_list)
 
+sep="/"
 if(output_dir==""){
   sep=""
 }
