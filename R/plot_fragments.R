@@ -145,6 +145,24 @@ get_fragments_length=function(bin_path="tools/samtools/samtools",bam="",remove_u
   data=read.table(paste0(sample_name,"_fragment_length.txt"))
 }
 
+
+#' Extract fragment length from a BAM file.
+#'
+#' This function takes a BAM file and a BED file as an input and outputs the fragment length distributions of all the regions in a TXT file.
+#'
+#'
+#' @param bin_path Path to samtools executable. Default path tools/samtools/samtools.
+#' @param verbose Enables progress messages. Default False.
+#' @param bed Path to BED file.
+#' @param bam Path to BAM file.
+#' @param max_frag_length Maximum fragment length to keep. Default 1000.
+#' @param mapq Minimum MapQ of the reads to keep. Default 10.
+#' @param threads Number of cores. Default 1
+#' @export
+
+
+
+
 get_fragment_length_bed=function(bin_path="tools/samtools/samtools",bam="",bed="",max_frag_length=1000,mapq=10,threads=1,verbose=FALSE){
 
 
