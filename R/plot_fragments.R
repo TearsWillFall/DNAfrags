@@ -161,8 +161,7 @@ get_fragments_length=function(bin_path="tools/samtools/samtools",bam="",remove_u
 #' @param output_dir Directory to output results.
 #' @export
 
-(bam="/home/osvaldas/Work/New/SRR11742859_SORTED.RMDUP.SORTED.BAM/SRR11742859.SORTED.RMDUP.SORTED.bam",bed="/home/osvaldas/TESTS/TranscriptionFactorProfiling/Ref/GTRD_1000sites/Androgen.Top1000sites.bed",threads=4
-bin_path="~/Work/New/tools/samtools/samtools"
+
 
 get_fragment_length_bed=function(bin_path="tools/samtools/samtools",bam="",bed="",max_frag_length=1000,mapq=10,threads=1,output_dir="",verbose=FALSE){
 
