@@ -181,17 +181,12 @@ get_fragment_length_bed=function(bin_path="tools/samtools/samtools",bam="",bed="
 
 
   data=data.frame(chr=ref_data[,1],r_start=(ref_data[,2]+1),r_end=(ref_data[,3]+1)) %>% dplyr::mutate(f_start=r_start-max_frag_length,f_end=r_end+max_frag_length,r_id=ref_data[,4]) %>% dplyr::filter(!grepl("_",chr))
-  print(data)
   FUN=function(x,bin_path,bam,mapq,awk_file_filter,awk_file_stats,max_frag_length,verbose){
   region_data=data.frame(t(x))
   print(paste("Analyzing region:",region_data$r_id))
   position=""
   if (!region_data$chr==""){
-    if (!grepl("chr",region_data$chr)){
-      position=paste0("chr",region_data$chr)}
-      else{
         position=region_data$chr
-      }
     if (!region_data$f_start==1){
       position=paste0(position,":",as.numeric(region_data$f_start))
       if (!region_data$f_end==""){
