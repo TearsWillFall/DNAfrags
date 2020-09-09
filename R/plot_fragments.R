@@ -184,16 +184,8 @@ get_fragment_length_bed=function(bin_path="tools/samtools/samtools",bam="",bed="
   FUN=function(x,bin_path,bam,mapq,awk_file_filter,awk_file_stats,max_frag_length,verbose){
   region_data=data.frame(t(x))
   print(paste("Analyzing region:",region_data$r_id))
-  position=""
-  if (!region_data$chr==""){
-        position=region_data$chr
-    if (!region_data$f_start==1){
-      position=paste0(position,":",as.numeric(region_data$f_start))
-      if (!region_data$f_end==""){
-        position=paste0(position,"-",as.numeric(region_data$f_end))
-        }
-      }
-    }
+  position=paste0(region_data$chr,":",as.numeric(region_data$f_start),"-",as.numeric(region_data$f_end))
+
 if(verbose){
   print(paste0("{ ",bin_path," view ",bam," -f 99 ", position," | awk -v MIN_MAPQ=",mapq,
   " -v MAX_FRAGMENT_LEN=",max_frag_length," -v CHR=",region_data$chr," -v R_START=",as.numeric(region_data$r_start),
