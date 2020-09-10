@@ -183,20 +183,6 @@ get_fragment_length_bed=function(bin_path="tools/samtools/samtools",bam="",bed="
   data=data.frame(chr=ref_data[,1],r_start=(as.numeric(ref_data[,2])+1),r_end=(as.numeric(ref_data[,3])+1)) %>% dplyr::mutate(f_start=ifelse((r_start-max_frag_length)<1,1,r_start-max_frag_length),f_end=(r_end+max_frag_length),r_id=ref_data[,4]) %>% dplyr::filter(!grepl("_",chr))
   FUN=function(x,bin_path,bam,mapq,awk_file_filter,awk_file_stats,max_frag_length,verbose){
   region_data=data.frame(t(x))
-  message(region_data)
-  message(paste("Analyzing region:",region_data$r_id))
-  position=paste0(region_data$chr,":",as.numeric(region_data$f_start),"-",as.numeric(region_data$f_end))
-  message(position)
-if(verbose){
-  cat(paste0("{ ",bin_path," view ",bam," -f 99 ", position," | awk -v MIN_MAPQ=",mapq,
-  " -v MAX_FRAGMENT_LEN=",max_frag_length," -v CHR=",region_data$chr," -v R_START=",as.numeric(region_data$r_start),
-  " -v R_END=",as.numeric(region_data$r_end)," -v R_ID=",region_data$r_id," -f ", awk_file_filter," ; ",bin_path," view ",bam," -f 163 ", position," | awk -v MIN_MAPQ=",mapq,
-  " -v MAX_FRAGMENT_LEN=",max_frag_length," -v CHR=",region_data$chr," -v R_START=",as.numeric(region_data$r_start),
-  " -v R_END=",as.numeric(region_data$r_end)," -v R_ID=",region_data$r_id," -f ", awk_file_filter,"; } | sort -k9 -n | awk -v MIN_MAPQ=",mapq,
-  " -v MAX_FRAGMENT_LEN=",max_frag_length," -v CHR=",region_data$chr," -v R_START=",as.numeric(region_data$r_start),
-  " -v R_END=",as.numeric(region_data$r_end)," -v R_ID=",region_data$r_id," -f ", awk_file_stats))
-}
-
 
   fragment_data=read.csv(text=system(paste0("{ ",bin_path," view ",bam," -f 99 ", position," | awk -v MIN_MAPQ=",mapq,
   " -v MAX_FRAGMENT_LEN=",max_frag_length," -v CHR=",region_data$chr," -v R_START=",as.numeric(region_data$r_start),
