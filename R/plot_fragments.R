@@ -185,15 +185,15 @@ get_fragment_length_bed=function(bin_path="tools/samtools/samtools",bam="",bed="
   region_data=t(x)
 
 
-  position=paste0(region_data$chr,":",as.numeric(region_data$f_start),"-",as.numeric(region_data$f_end))
+  position=paste0(region_data[1],":",as.numeric(region_data[4]),"-",as.numeric(region_data[5]))
 
   fragment_data=read.csv(text=system(paste0("{ ",bin_path," view ",bam," -f 99 ", position," | awk -v MIN_MAPQ=",mapq,
-  " -v MAX_FRAGMENT_LEN=",max_frag_length," -v CHR=",region_data$chr," -v R_START=",as.numeric(region_data$r_start),
-  " -v R_END=",as.numeric(region_data$r_end)," -v R_ID=",region_data$r_id," -f ", awk_file_filter," ; ",bin_path," view ",bam," -f 163 ", position," | awk -v MIN_MAPQ=",mapq,
-  " -v MAX_FRAGMENT_LEN=",max_frag_length," -v CHR=",region_data$chr," -v R_START=",as.numeric(region_data$r_start),
-  " -v R_END=",as.numeric(region_data$r_end)," -v R_ID=",region_data$r_id," -f ", awk_file_filter,"; } | sort -k9 -n | awk -v MIN_MAPQ=",mapq,
-  " -v MAX_FRAGMENT_LEN=",max_frag_length," -v CHR=",region_data$chr," -v R_START=",as.numeric(region_data$r_start),
-  " -v R_END=",as.numeric(region_data$r_end)," -v R_ID=",region_data$r_id," -f ", awk_file_stats),intern=TRUE),header=FALSE,sep="\t")
+  " -v MAX_FRAGMENT_LEN=",max_frag_length," -v CHR=",region_data[1]," -v R_START=",as.numeric(region_data[2]),
+  " -v R_END=",as.numeric(region_data[3])," -v R_ID=",region_data[6]," -f ", awk_file_filter," ; ",bin_path," view ",bam," -f 163 ", position," | awk -v MIN_MAPQ=",mapq,
+  " -v MAX_FRAGMENT_LEN=",max_frag_length," -v CHR=",region_data[1]," -v R_START=",as.numeric(region_data[2]),
+  " -v R_END=",as.numeric(region_data[3])," -v R_ID=",region_data[6]," -f ", awk_file_filter,"; } | sort -k9 -n | awk -v MIN_MAPQ=",mapq,
+  " -v MAX_FRAGMENT_LEN=",max_frag_length," -v CHR=",region_data[1]," -v R_START=",as.numeric(region_data[2]),
+  " -v R_END=",as.numeric(region_data[3])," -v R_ID=",region_data[6]," -f ", awk_file_stats),intern=TRUE),header=FALSE,sep="\t")
   names(fragment_data)=c("Region_ID","Chr","Region_Start","Region_End","Number_of_Reads","Frag_len_med","Frag_len_avg","Frag_len_sd","Frag_len_distr")
   fragment_data$Chr=as.character(fragment_data$Chr)
   return(fragment_data)
