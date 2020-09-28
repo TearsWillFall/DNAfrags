@@ -2,7 +2,8 @@
 {
     fl_count[NR] = $9;
     fl_dist[$9":"] = fl_dist[$9":"]+1;
-
+    mot = substr($10, 1, 4);
+    motif_dist[mot":"] = motif_dist[mot":"]+1;
 }
 END {
     fl_median = 0
@@ -17,6 +18,18 @@ END {
           fl_str_dist = fl_dist[fl]
         }
     }
+
+    motif_str_dist=""
+    for( motif in motif_dist ) {
+        if (motif_str_dist != ""){
+        motif_str_dist  = motif_str_dist"|"motif motif_dist[motif]
+        }
+        else{
+          motif_str_dist = motif_dist[motif]
+        }
+    }
+
+
 
     if (NR > 1) {
         if ((NR % 2) == 1) {
@@ -45,5 +58,5 @@ END {
             fl_sd = 0
         }
     }
-    printf( R_ID"\t"CHR"\t"R_START"\t"R_END"\t%d\t%d\t%d\t%d\t%s\n", NR , fl_median, fl_average , fl_sd, fl_str_dist, motif_str_dist);
+    printf( R_ID"\t"CHR"\t"R_START"\t"R_END"\t%d\t%d\t%d\t%d\t%s\t%s\n", NR , fl_median, fl_average , fl_sd, fl_str_dist, motif_str_dist);
 }
