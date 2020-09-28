@@ -196,6 +196,8 @@ get_fragment_length_bed=function(bin_path="tools/samtools/samtools",bam="",bed="
   " -v R_END=",as.numeric(region_data[3])," -v R_ID=",region_data[6]," -f ", awk_file_stats),intern=TRUE),header=FALSE,sep="\t")
   names(fragment_data)=c("Region_ID","Chr","Region_Start","Region_End","Number_of_Reads","Frag_len_med","Frag_len_avg","Frag_len_sd","Frag_len_distr","Motif_dist")
   fragment_data$Chr=as.character(fragment_data$Chr)
+  fragment_data$Frag_len_distr=as.character(fragment_data$Frag_len_distr)
+  fragment_data$Motif_dist=as.character(fragment_data$Motif_dist)
   return(fragment_data)
 }
 
@@ -204,7 +206,7 @@ cl=parallel::makeCluster(threads)
 df_list=pbapply::pbapply(X=data,1,FUN=FUN,bin_path=bin_path,bam=bam,mapq=mapq,awk_file_filter=awk_file_filter,
 max_frag_length=max_frag_length,awk_file_stats=awk_file_stats,verbose=verbose,cl=cl)
 on.exit(parallel::stopCluster(cl))
-
+print(df_list)
 
 df=dplyr::bind_rows(df_list) %>% dplyr::arrange(Chr,Region_Start,Region_End)
 
