@@ -22,7 +22,7 @@ END {
     motif_str_dist=""
     for( motif in motif_dist ) {
         if (motif_str_dist != ""){
-        motif_str_dist  = motif_str_dist "|"mot motif_dist[motif]
+        motif_str_dist  = motif_str_dist"|"motif motif_dist[motif]
         }
         else{
           motif_str_dist = motif_dist[motif]
@@ -58,5 +58,5 @@ END {
             fl_sd = 0
         }
     }
-    printf( R_ID"\t"CHR"\t"R_START"\t"R_END"\t%d\t%d\t%d\t%d\t%s\n", NR , fl_median, fl_average , fl_sd, fl_str_dist,motif_str_dist);
+    printf( R_ID"\t"CHR"\t"R_START"\t"R_END"\t%d\t%d\t%d\t%d\t%s\n", NR , fl_median, fl_average , fl_sd, fl_str_dist, motif_str_dist);
 }
