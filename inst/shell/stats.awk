@@ -11,22 +11,12 @@ END {
     fl_sd = 0
     fl_str_dist=""
     for( fl in fl_dist ) {
-        if (fl_str_dist != ""){
         fl_str_dist = fl_str_dist"|"fl fl_dist[fl]
-        }
-        else{
-          fl_str_dist = fl_dist[fl]
-        }
     }
 
     motif_str_dist=""
     for( motif in motif_dist ) {
-        if (motif_str_dist != ""){
         motif_str_dist  = motif_str_dist"|"motif motif_dist[motif]
-        }
-        else{
-          motif_str_dist = motif_dist[motif]
-        }
     }
 
 
