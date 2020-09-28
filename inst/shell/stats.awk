@@ -2,8 +2,7 @@
 {
     fl_count[NR] = $9;
     fl_dist[$9":"] = fl_dist[$9":"]+1;
-    mot = substr($10, 1, 4);
-    motif_dist[substr($10, 1, 4)":"] = motif_dist[mot":"]+1;
+
 }
 END {
     fl_median = 0
@@ -18,18 +17,6 @@ END {
           fl_str_dist = fl_dist[fl]
         }
     }
-
-    motif_str_dist=""
-    for( motif in motif_dist ) {
-        if (motif_str_dist != ""){
-        motif_str_dist  = motif_str_dist"|"motif motif_dist[motif]
-        }
-        else{
-          motif_str_dist = motif_dist[motif]
-        }
-    }
-
-
 
     if (NR > 1) {
         if ((NR % 2) == 1) {
