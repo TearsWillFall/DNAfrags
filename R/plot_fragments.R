@@ -194,7 +194,7 @@ get_fragment_length_bed=function(bin_path="tools/samtools/samtools",bam="",bed="
   " -v R_END=",as.numeric(region_data[3])," -v R_ID=",region_data[6]," -f ", awk_file_filter,"; } | sort -k9 -n | awk -v MIN_MAPQ=",mapq,
   " -v MAX_FRAGMENT_LEN=",max_frag_length," -v CHR=",region_data[1]," -v R_START=",as.numeric(region_data[2]),
   " -v R_END=",as.numeric(region_data[3])," -v R_ID=",region_data[6]," -f ", awk_file_stats),intern=TRUE),header=FALSE,sep="\t")
-  names(fragment_data)=c("Region_ID","Chr","Region_Start","Region_End","Number_of_Reads","Frag_len_med","Frag_len_avg","Frag_len_sd","Frag_len_distr")
+  names(fragment_data)=c("Region_ID","Chr","Region_Start","Region_End","Number_of_Reads","Frag_len_med","Frag_len_avg","Frag_len_sd","Frag_len_distr","Motif_distr")
   fragment_data$Chr=as.character(fragment_data$Chr)
   return(fragment_data)
 }
