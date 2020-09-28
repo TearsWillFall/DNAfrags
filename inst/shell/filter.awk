@@ -7,5 +7,5 @@
     if (($4+$9) < R_START) bPrint = 0
     if ($4 > R_END) bPrint = 0
     if (bPrint == 1)
-        print R_ID"\t"CHR"\t"R_START"\t"R_END"\t"$1"\t"$3"\t"$4"\t"($4+$9)"\t"$9;
+        print R_ID"\t"CHR"\t"R_START"\t"R_END"\t"$1"\t"$3"\t"$4"\t"($4+$9)"\t"$9"\t"$10;
 }

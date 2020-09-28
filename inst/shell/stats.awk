@@ -3,7 +3,7 @@
     fl_count[NR] = $9;
     fl_dist[$9":"] = fl_dist[$9":"]+1;
     mot = substr($10, 1, 4);
-    motif_dist[mot":"] = motif_dist[mot":"]+1;
+    motif_dist[substr($10, 1, 4)":"] = motif_dist[mot":"]+1;
 }
 END {
     fl_median = 0
