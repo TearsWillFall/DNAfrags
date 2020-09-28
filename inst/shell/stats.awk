@@ -1,8 +1,8 @@
 #/usr/bin/env awk
 {
+    mot = substr($10, 1, 4);
     fl_count[NR] = $9;
     fl_dist[$9":"] = fl_dist[$9":"]+1;
-    mot = substr($10, 1, 4);
     motif_dist[mot":"] = motif_dist[mot":"]+1;
 }
 END {
@@ -58,5 +58,5 @@ END {
             fl_sd = 0
         }
     }
-    printf( R_ID"\t"CHR"\t"R_START"\t"R_END"\t%d\t%d\t%d\t%d\t%s\t%s\n", NR , fl_median, fl_average , fl_sd, fl_str_dist, motif_str_dist);
+    printf( R_ID"\t"CHR"\t"R_START"\t"R_END"\t%d\t%d\t%d\t%d\t%s\t%s\n", NR , fl_median, fl_average , fl_sd , fl_str_dist , motif_str_dist);
 }
