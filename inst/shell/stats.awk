@@ -22,10 +22,10 @@ END {
     motif_str_dist=""
     for( motif in motif_dist ) {
         if (motif_str_dist != ""){
-        motif_str_dist  = motif_str_dist "|"mot motif_dist[mot]
+        motif_str_dist  = motif_str_dist "|"mot motif_dist[motif]
         }
         else{
-          motif_str_dist = motif_dist[mot]
+          motif_str_dist = motif_dist[motif]
         }
     }
 
