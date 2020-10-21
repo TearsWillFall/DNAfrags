@@ -159,11 +159,12 @@ get_fragments_length=function(bin_path="tools/samtools/samtools",bam="",remove_u
 #' @param mapq Minimum MapQ of the reads to keep. Default 10.
 #' @param threads Number of cores. Default 1
 #' @param output_dir Directory to output results.
+#' @param mode Mode in which to output the fragment length. Default 0. Mode 0: Returns fragment length for R1 and R2 reads. Mode 1: Returns fragment legnth for R1 reads. Mode 2: Returns fragment length for R2 reads.
 #' @export
 
 
 
-get_fragment_length_bed=function(bin_path="tools/samtools/samtools",bam="",bed="",max_frag_length=1000,mapq=10,threads=1,output_dir="",verbose=FALSE){
+get_fragment_length_bed=function(bin_path="tools/samtools/samtools",bam="",bed="",max_frag_length=1000,mapq=10,threads=1,output_dir="",verbose=FALSE,mode=0){
 
 
   sample_name=ULPwgs::get_sample_name(bam)
@@ -187,13 +188,30 @@ get_fragment_length_bed=function(bin_path="tools/samtools/samtools",bam="",bed="
 
   position=paste0(region_data[1],":",as.numeric(region_data[4]),"-",as.numeric(region_data[5]))
 
-  fragment_data=read.csv(text=system(paste0("{ ",bin_path," view ",bam," -f 99 ", position," | awk -v MIN_MAPQ=",mapq,
-  " -v MAX_FRAGMENT_LEN=",max_frag_length," -v CHR=",region_data[1]," -v R_START=",as.numeric(region_data[2]),
-  " -v R_END=",as.numeric(region_data[3])," -v R_ID=",region_data[6]," -f ", awk_file_filter," ; ",bin_path," view ",bam," -f 163 ", position," | awk -v MIN_MAPQ=",mapq,
-  " -v MAX_FRAGMENT_LEN=",max_frag_length," -v CHR=",region_data[1]," -v R_START=",as.numeric(region_data[2]),
-  " -v R_END=",as.numeric(region_data[3])," -v R_ID=",region_data[6]," -f ", awk_file_filter,"; } | sort -k9 -n | awk -v MIN_MAPQ=",mapq,
-  " -v MAX_FRAGMENT_LEN=",max_frag_length," -v CHR=",region_data[1]," -v R_START=",as.numeric(region_data[2]),
-  " -v R_END=",as.numeric(region_data[3])," -v R_ID=",region_data[6]," -f ", awk_file_stats),intern=TRUE),header=FALSE,sep="\t")
+  if (mode==0){
+      fragment_data=read.csv(text=system(paste0("{ ",bin_path," view ",bam," -f 99 ", position," | awk -v MIN_MAPQ=",mapq,
+      " -v MAX_FRAGMENT_LEN=",max_frag_length," -v CHR=",region_data[1]," -v R_START=",as.numeric(region_data[2]),
+      " -v R_END=",as.numeric(region_data[3])," -v R_ID=",region_data[6]," -f ", awk_file_filter," ; ",bin_path," view ",bam," -f 163 ", position," | awk -v MIN_MAPQ=",mapq,
+      " -v MAX_FRAGMENT_LEN=",max_frag_length," -v CHR=",region_data[1]," -v R_START=",as.numeric(region_data[2]),
+      " -v R_END=",as.numeric(region_data[3])," -v R_ID=",region_data[6]," -f ", awk_file_filter,"; } | sort -k9 -n | awk -v MIN_MAPQ=",mapq,
+      " -v MAX_FRAGMENT_LEN=",max_frag_length," -v CHR=",region_data[1]," -v R_START=",as.numeric(region_data[2]),
+      " -v R_END=",as.numeric(region_data[3])," -v R_ID=",region_data[6]," -f ", awk_file_stats),intern=TRUE),header=FALSE,sep="\t")
+  }else if(mode==1){
+    fragment_data=read.csv(text=system(paste0("{ ",bin_path," view ",bam," -f 99 ", position," | awk -v MIN_MAPQ=",mapq,
+    " -v MAX_FRAGMENT_LEN=",max_frag_length," -v CHR=",region_data[1]," -v R_START=",as.numeric(region_data[2]),
+    " -v R_END=",as.numeric(region_data[3])," -v R_ID=",region_data[6]," -f ", awk_file_filter,"; } | sort -k9 -n | awk -v MIN_MAPQ=",mapq,
+    " -v MAX_FRAGMENT_LEN=",max_frag_length," -v CHR=",region_data[1]," -v R_START=",as.numeric(region_data[2]),
+    " -v R_END=",as.numeric(region_data[3])," -v R_ID=",region_data[6]," -f ", awk_file_stats),intern=TRUE),header=FALSE,sep="\t")
+  }else if(mode==2){
+    fragment_data=read.csv(text=system(paste0("{ ",bin_path," view ",bam," -f 163 ", position," | awk -v MIN_MAPQ=",mapq,
+    " -v MAX_FRAGMENT_LEN=",max_frag_length," -v CHR=",region_data[1]," -v R_START=",as.numeric(region_data[2]),
+    " -v R_END=",as.numeric(region_data[3])," -v R_ID=",region_data[6]," -f ", awk_file_filter,"; } | sort -k9 -n | awk -v MIN_MAPQ=",mapq,
+    " -v MAX_FRAGMENT_LEN=",max_frag_length," -v CHR=",region_data[1]," -v R_START=",as.numeric(region_data[2]),
+    " -v R_END=",as.numeric(region_data[3])," -v R_ID=",region_data[6]," -f ", awk_file_stats),intern=TRUE),header=FALSE,sep="\t")
+  } else(
+    stop(paste("Mode:",mode,"is not a valid mode"))
+  )
+
   names(fragment_data)=c("Region_ID","Chr","Region_Start","Region_End","Number_of_Reads","Frag_len_med","Frag_len_avg","Frag_len_sd","Frag_len_distr","Motif_dist")
   fragment_data$Chr=as.character(fragment_data$Chr)
   return(fragment_data)
