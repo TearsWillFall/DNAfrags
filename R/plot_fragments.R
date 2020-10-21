@@ -182,7 +182,7 @@ get_fragment_length_bed=function(bin_path="tools/samtools/samtools",bam="",bed="
 
 
   data=data.frame(chr=ref_data[,1],r_start=(as.numeric(ref_data[,2])+1),r_end=(as.numeric(ref_data[,3])+1)) %>% dplyr::mutate(f_start=ifelse((r_start-max_frag_length)<1,1,r_start-max_frag_length),f_end=(r_end+max_frag_length),r_id=ref_data[,4]) %>% dplyr::filter(!grepl("_",chr))
-  FUN=function(x,bin_path,bam,mapq,awk_file_filter,awk_file_stats,max_frag_length,verbose){
+  FUN=function(x,bin_path,bam,mapq,awk_file_filter,awk_file_stats,max_frag_length,verbose,mode){
   region_data=t(x)
 
 
@@ -220,7 +220,7 @@ get_fragment_length_bed=function(bin_path="tools/samtools/samtools",bam="",bed="
 tictoc::tic("Analysis time: ")
 cl=parallel::makeCluster(threads)
 df_list=pbapply::pbapply(X=data,1,FUN=FUN,bin_path=bin_path,bam=bam,mapq=mapq,awk_file_filter=awk_file_filter,
-max_frag_length=max_frag_length,awk_file_stats=awk_file_stats,verbose=verbose,cl=cl)
+max_frag_length=max_frag_length,awk_file_stats=awk_file_stats,verbose=verbose,cl=cl,mode=mode)
 on.exit(parallel::stopCluster(cl))
 
 df=dplyr::bind_rows(df_list) %>% dplyr::arrange(Chr,Region_Start,Region_End)
