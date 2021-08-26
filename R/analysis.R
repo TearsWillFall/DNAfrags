@@ -15,17 +15,28 @@
 
 
 trim_fragments=function(bin_path="tools/fastx_toolkit/bin/fastx_trimmer",quality=33,first_base="",last_base="",file_R1="",file_R2="",output_dir="",verbose=FALSE){
+
   sep="/"
 
   if(output_dir==""){
     sep=""
   }
-
   sample_name=ULPwgs::get_sample_name(file_R1)
+
+
+
 
   if (!file_R2==""){
   sample_name=ULPwgs::intersect_sample_name(file_path=file_R1,file_path2=file_R2)
   output_dir=paste0(output_dir,sep,sample_name,"_trimmed_",first_base,"-",last_base)
+  if(grepl(".gz",file_R1)){
+    system(paste0("zcat ",file_R1, ">",paste0(output_dir,"/",sub(".gz$","",file_R1))))
+    file_R1=paste0(output_dir,"/",sub(".gz$","",file_R1))
+  }
+  if (grepl(".gz",file_R2)){
+    system(paste0("zcat ",file_R2, ">",paste0(output_dir,"/",sub(".gz$","",file_R2))))
+    file_R2=paste0(output_dir,"/",sub(".gz$","",file_R2))
+  }
   if(!dir.exists(output_dir)){
     dir.create(output_dir)
   }
@@ -40,6 +51,11 @@ trim_fragments=function(bin_path="tools/fastx_toolkit/bin/fastx_trimmer",quality
   }else{
   sample_name=unlist(strsplit(sample_name,"_"))[1]
   output_dir=paste0(output_dir,sep,sample_name,"_trimmed_",first_base,"-",last_base)
+  if(grepl(".gz",file_R1)){
+    system(paste0("zcat ",file_R1, ">",paste0(output_dir,"/",sub(".gz$","",file_R1))))
+    file_R1=paste0(output_dir,"/",sub(".gz$","",file_R1))
+  }
+
   if(!dir.exists(output_dir)){
     dir.create(output_dir)
   }
