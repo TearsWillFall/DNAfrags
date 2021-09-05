@@ -187,7 +187,7 @@ get_fragment_length_bed=function(bin_path="tools/samtools/samtools",bam="",bed="
   }
   if (!is.null(start)&!is.null(end)&!is.null(end_bin)&!is.null(start_bin)){
     ctrl_bin=ref_data
-    ctrl_bin$V4=(as.numeric(ctrl_bin$V2)+as.numeric(ctrl_bin$V3))/2
+    ctrl_bin$V4=as.integer((as.numeric(ctrl_bin$V2)+as.numeric(ctrl_bin$V3))/2)
     ctrl_bin$V2=ctrl_bin$V4-start_bin
     ctrl_bin$V3=ctrl_bin$V4+end_bin
     left_flank=ctrl_bin
