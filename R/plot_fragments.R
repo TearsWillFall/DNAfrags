@@ -193,7 +193,9 @@ get_fragment_length_bed=function(bin_path="tools/samtools/samtools",bam="",bed="
     left_flank=ctrl_bin
     right_flank=ctrl_bin
     left_flank$V2=left_flank$V4-start
+    left_flank$V3=left_flank$V4-start_bin
     right_flank$V3=right_flank$V4+end
+    right_flank$V2=right_flank$V4+end_bin
     ref_data=rbind(left_flank,ctrl_bin,right_flank)
   }
 
