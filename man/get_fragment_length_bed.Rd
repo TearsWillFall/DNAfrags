@@ -13,7 +13,11 @@ get_fragment_length_bed(
   threads = 1,
   output_dir = "",
   verbose = FALSE,
-  mode = 0
+  mode = 0,
+  start = NULL,
+  end = NULL,
+  start_bin = NULL,
+  end_bin = NULL
 )
 }
 \arguments{
@@ -34,6 +38,14 @@ get_fragment_length_bed(
 \item{verbose}{Enables progress messages. Default False.}
 
 \item{mode}{Mode in which to output the fragment length. Default 0. Mode 0: Returns fragment length for R1 and R2 reads. Mode 1: Returns fragment legnth for R1 reads. Mode 2: Returns fragment length for R2 reads.}
+
+\item{start}{Downstream distance from (start+end)/2 position in bed file}
+
+\item{end}{Upstream distance from (start+end)/2 position in bed file}
+
+\item{start_bin}{Downstream distance from (start+end)/2 position in bed file for bin}
+
+\item{end_bin}{Upstream distance from (start+end)/2 position in bed file for bin}
 }
 \description{
 This function takes a BAM file and a BED file as an input and outputs the fragment length distributions of all the regions in a TXT file.

@@ -157,6 +157,10 @@ get_fragments_length=function(bin_path="tools/samtools/samtools",bam="",remove_u
 #' @param bam Path to BAM file.
 #' @param max_frag_length Maximum fragment length to keep. Default 1000.
 #' @param mapq Minimum MapQ of the reads to keep. Default 10.
+#' @param start Downstream distance from (start+end)/2 position in bed file
+#' @param end Upstream distance from (start+end)/2 position in bed file
+#' @param start_bin Downstream distance from (start+end)/2 position in bed file for bin
+#' @param end_bin Upstream distance from (start+end)/2 position in bed file for bin
 #' @param threads Number of cores. Default 1
 #' @param output_dir Directory to output results.
 #' @param mode Mode in which to output the fragment length. Default 0. Mode 0: Returns fragment length for R1 and R2 reads. Mode 1: Returns fragment legnth for R1 reads. Mode 2: Returns fragment length for R2 reads.
@@ -164,7 +168,7 @@ get_fragments_length=function(bin_path="tools/samtools/samtools",bam="",remove_u
 
 
 
-get_fragment_length_bed=function(bin_path="tools/samtools/samtools",bam="",bed="",max_frag_length=1000,mapq=10,threads=1,output_dir="",verbose=FALSE,mode=0){
+get_fragment_length_bed=function(bin_path="tools/samtools/samtools",bam="",bed="",max_frag_length=1000,mapq=10,threads=1,output_dir="",verbose=FALSE,mode=0,start=NULL,end=NULL,start_bin=NULL,end_bin=NULL){
 
   sample_name=ULPwgs::get_sample_name(bam)
 
@@ -180,6 +184,17 @@ get_fragment_length_bed=function(bin_path="tools/samtools/samtools",bam="",bed="
         if (!grepl("chr",chr_check)){
           ref_data[,1]=gsub("chr","",ref_data[,1])
         }
+  }
+  if (!is.null(start)&!is.null(end)&!is.null(end_bin)&!is.null(start_bin)){
+    ctrl_bin=ref_data
+    ctrl_bin$V4=(as.numeric(ctrl_bin$V2)+as.numeric(ctrl_bin$V3))/2
+    ctrl_bin$V2=ctrl_bin$V4-start_bin
+    ctrl_bin$V3=ctrl_bin$V4+end_bin
+    left_flank=ctrl_bin
+    right_flank=ctrl_bin
+    left_flank$V2=left_flank$V4-start
+    right_flank$V2=right_flank$V4+end
+    ref_data=rbind(left_flank,ctrl_bin,right_flank)
   }
 
   data=data.frame(chr=ref_data[,1],r_start=(as.numeric(ref_data[,2])+1),r_end=(as.numeric(ref_data[,3])+1)) %>% dplyr::mutate(f_start=ifelse((r_start-max_frag_length)<1,1,r_start-max_frag_length),f_end=(r_end+max_frag_length),r_id=as.character(ref_data[,4])) %>% dplyr::filter(!grepl("_",chr))
@@ -238,7 +253,7 @@ max_frag_length=max_frag_length,awk_file_stats=awk_file_stats,verbose=verbose,cl
 on.exit(parallel::stopCluster(cl))
 
 df=dplyr::bind_rows(df_list) %>% dplyr::arrange(Chr,Region_Start,Region_End)
-
+df$bed=ULPwgs::get_sample_name(bed)
 sep="/"
 if(output_dir==""){
   sep=""
