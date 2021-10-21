@@ -143,9 +143,9 @@ verbose=FALSE,threads=1){
   parallel::mclapply(chrs, FUN=function(x){
 
       if(verbose){
-        print(paste(bin_path,"view",flags,bam, x,paste0(" | awk '{sub(\"^-\", \"\", $9); print $9} |sort |uniq -c'|awk '{print ",sample_name,"\"\\t\"",x,"\"\\t\"$2\"\\t\"$1}' >>"),paste0(sample_name,"_fragment_length.txt")))
+        print(paste(bin_path,"view",flags,bam, x,paste0(" | awk '{sub(\"^-\", \"\", $9); print $9}' |sort |uniq -c|awk '{print ",sample_name,"\"\\t\"",x,"\"\\t\"$2\"\\t\"$1}' >>"),paste0(sample_name,"_fragment_length.txt")))
       }
-      system(paste(bin_path,"view",flags,bam, x,paste0(" | awk '{sub(\"^-\", \"\", $9); print $9} |sort |uniq -c'|awk '{print ",sample_name,"\"\\t\"",x,"\"\\t\"$2\"\\t\"$1}' >>"),paste0(sample_name,"_fragment_length.txt")))
+      system(paste(bin_path,"view",flags,bam, x,paste0(" | awk '{sub(\"^-\", \"\", $9); print $9}' |sort |uniq -c|awk '{print ",sample_name,"\"\\t\"",x,"\"\\t\"$2\"\\t\"$1}' >>"),paste0(sample_name,"_fragment_length.txt")))
     },mc.cores=threads)
     data=read.table(paste0(sample_name,"_fragment_length.txt"))
 }
