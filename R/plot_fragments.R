@@ -124,25 +124,29 @@ plot_fragments_length=function(file="",verbose=FALSE,min_frag_length=2,max_frag_
 #'
 #' @param bin_path Path to samtools executable. Default path tools/samtools/samtools.
 #' @param verbose Enables progress messages. Default False.
-#' @param remove_unmapped Removes unmapped reads and/or mates. Only in BAM files. Default false
-#' @param bam Path to BAM.
+#' @param remove_unmapped Removes unmapped reads and/or mates. Only in BAM files. Default TRUE
+#' @param bam Path to BAM file.
+#' @param threads Number of threads to use.
 #' @export
 
+get_fragments_length=function(bin_path="tools/samtools/samtools",bam="",remove_unmapped=TRUE,verbose=FALSE,threads=1){
 
-
-get_fragments_length=function(bin_path="tools/samtools/samtools",bam="",remove_unmapped=FALSE,verbose=FALSE){
   sample_name=ULPwgs::get_sample_name(bam)
   flags=""
   if (remove_unmapped){
     flags="-F 4 -f 2"
   }
 
+  chrs=get_chr_names_in_bam(bin_path=bin_path,bam=bam,verbose=verbose)
 
-  if(verbose){
-    print(paste(bin_path,"view",flags,bam," | awk '{sub(\"^-\", \"\", $9); print $9}' >",paste0(sample_name,"_fragment_length.txt")))
-  }
-  system(paste(bin_path,"view",flags,bam," | awk '{sub(\"^-\", \"\", $9); print $9}' >",paste0(sample_name,"_fragment_length.txt")))
-  data=read.table(paste0(sample_name,"_fragment_length.txt"))
+  parallel::mclapply(chrs, FUN=function(x){
+
+      if(verbose){
+        print(paste(bin_path,"view",flags,bam, x,paste0(" | awk '{sub(\"^-\", \"\", $9); print $9} |sort |uniq -c'|awk '{print ",ULPwgs::get_sample_name(bam),"\"\\t\"",x,"\"\\t\"$2\"\\t\"$1}' >>"),paste0(sample_name,"_fragment_length.txt")))
+      }
+      system(paste(bin_path,"view",flags,bam, x,paste0(" | awk '{sub(\"^-\", \"\", $9); print $9} |sort |uniq -c'|awk '{print ",ULPwgs::get_sample_name(bam),"\"\\t\"",x,"\"\\t\"$2\"\\t\"$1}' >>"),paste0(sample_name,"_fragment_length.txt")))
+    },mc.cores=threads)
+    data=read.table(paste0(sample_name,"_fragment_length.txt"))
 }
 
 
