@@ -2,6 +2,7 @@
 
 export("%>%")
 export(filter_fragments)
+export(get_chr_names_in_bam)
 export(get_fragment_length_bed)
 export(get_fragments_length)
 export(install_required_tools)

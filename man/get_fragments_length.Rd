@@ -7,18 +7,21 @@
 get_fragments_length(
   bin_path = "tools/samtools/samtools",
   bam = "",
-  remove_unmapped = FALSE,
-  verbose = FALSE
+  remove_unmapped = TRUE,
+  verbose = FALSE,
+  threads = 1
 )
 }
 \arguments{
 \item{bin_path}{Path to samtools executable. Default path tools/samtools/samtools.}
 
-\item{bam}{Path to BAM.}
+\item{bam}{Path to BAM file.}
 
-\item{remove_unmapped}{Removes unmapped reads and/or mates. Only in BAM files. Default false}
+\item{remove_unmapped}{Removes unmapped reads and/or mates. Only in BAM files. Default TRUE}
 
 \item{verbose}{Enables progress messages. Default False.}
+
+\item{threads}{Number of threads to use.}
 }
 \description{
 This function takes a BAM file as input and outputs the fragment length of all reads in a TXT file.
