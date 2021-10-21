@@ -147,7 +147,13 @@ verbose=FALSE,threads=1){
       }
       system(paste(bin_path,"view",flags,bam, x,paste0(" | awk '{sub(\"^-\", \"\", $9); print $9}' |sort |uniq -c | sort -k2 -V | awk '{print \"",sample_name,"\"\"\\t\"\"",x,"\"\"\\t\"$2\"\\t\"$1}' >>"),paste0(sample_name,"_fragment_length.txt")))
     },mc.cores=threads)
-    data=read.table(paste0(sample_name,"_fragment_length.txt"))
+    dat=read.table(paste0(sample_name,"_fragment_length.txt"))
+    names(dat)=c("SAMPLE","REGION","SIZE","COUNT")
+    dat_tmp=dat %>% group_by(SAMPLE,SIZE) %>% summarise(COUNT=sum(COUNT))
+    dat_tmp$REGION="GENOME"
+    dat=rbind(dat,dat_bind)
+    write.table(file=paste0(sample_name,"_fragment_length.txt"),dat,quote=FALSE,col.names=TRUE,row.names=FALSE)
+    return(dat)
 }
 
 
