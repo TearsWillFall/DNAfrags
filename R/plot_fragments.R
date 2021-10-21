@@ -149,7 +149,7 @@ verbose=FALSE,threads=1){
     },mc.cores=threads)
     dat=read.table(paste0(sample_name,"_fragment_length.txt"))
     names(dat)=c("SAMPLE","REGION","SIZE","COUNT")
-    dat_tmp=dat %>% group_by(SAMPLE,SIZE) %>% dplyr::summarise(COUNT=sum(COUNT))
+    dat_tmp=dat %>% dplyr::group_by(SAMPLE,SIZE) %>% dplyr::summarise(COUNT=sum(COUNT))
     dat_tmp$REGION="GENOME"
     dat=rbind(dat,dat_bind)
     write.table(file=paste0(sample_name,"_fragment_length.txt"),dat,quote=FALSE,col.names=TRUE,row.names=FALSE)
