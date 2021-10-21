@@ -12,7 +12,7 @@ get_chr_names_in_bam=function(bin_path="tools/samtools/samtools",bam="",verbose=
   if(verbose){
     print(paste0(bin_path," view -H ",bam," | grep @SQ"))
   }
-  chr=read.table(system(paste0(bin_path," view -H ",bam," | grep @SQ"),intern=TRUE))
+  chr=read.table(text=system(paste0(bin_path," view -H ",bam," | grep @SQ"),intern=TRUE))
   chr=chr[2]
   chr=unlist(lapply(chr,FUN=function(x){strsplit(x,":")[[1]][2]}))
   return(chr)
