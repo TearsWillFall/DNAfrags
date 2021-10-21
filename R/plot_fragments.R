@@ -151,7 +151,7 @@ verbose=FALSE,threads=1){
     names(dat)=c("SAMPLE","REGION","SIZE","COUNT")
     dat_tmp=dat %>% dplyr::group_by(SAMPLE,SIZE) %>% dplyr::summarise(COUNT=sum(COUNT))
     dat_tmp$REGION="GENOME"
-    dat=rbind(dat,dat_tmp)
+    dat=dplyr::bind_rows(dat,dat_tmp)
     write.table(file=paste0(sample_name,"_fragment_length.txt"),dat,quote=FALSE,col.names=TRUE,row.names=FALSE)
     return(dat)
 }
