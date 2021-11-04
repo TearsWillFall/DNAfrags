@@ -140,14 +140,14 @@ verbose=FALSE,threads=1){
 
   chrs=get_chr_names_in_bam(bin_path=bin_path,bam=bam,verbose=verbose)
 
-  parallel::mclapply(chrs, FUN=function(x){
+  dat=parallel::mclapply(chrs, FUN=function(x){
 
       if(verbose){
-        print(paste(bin_path,"view",flags,bam, x,paste0(" | awk '{sub(\"^-\", \"\", $9); print $9}' |sort |uniq -c | sort -k2 -V | awk '{print \"",sample_name,"\"\"\\t\"\"",x,"\"\"\\t\"$2\"\\t\"$1}' >>"),paste0(sample_name,"_fragment_length.txt")))
+        print(paste(bin_path,"view",flags,bam, x,paste0(" | awk '{sub(\"^-\", \"\", $9); print $9}' |sort |uniq -c | sort -k2 -V | awk '{print \"",sample_name,"\"\"\\t\"\"",x,"\"\"\\t\"$2\"\\t\"$1}' ")))
       }
-      system(paste(bin_path,"view",flags,bam, x,paste0(" | awk '{sub(\"^-\", \"\", $9); print $9}' |sort |uniq -c | sort -k2 -V | awk '{print \"",sample_name,"\"\"\\t\"\"",x,"\"\"\\t\"$2\"\\t\"$1}' >>"),paste0(sample_name,"_fragment_length.txt")))
+      system(paste(bin_path,"view",flags,bam, x,paste0(" | awk '{sub(\"^-\", \"\", $9); print $9}' |sort |uniq -c | sort -k2 -V | awk '{print \"",sample_name,"\"\"\\t\"\"",x,"\"\"\\t\"$2\"\\t\"$1}'")),intern=TRUE)
     },mc.cores=threads)
-    dat=read.table(paste0(sample_name,"_fragment_length.txt"),stringsAsFactors=FALSE)
+    dat=dplyr::bind_rows(dat)
     names(dat)=c("SAMPLE","REGION","SIZE","COUNT")
     dat_tmp=dat %>% dplyr::group_by(SAMPLE,SIZE) %>% dplyr::summarise(COUNT=sum(COUNT))
     dat_tmp$REGION="GENOME"
