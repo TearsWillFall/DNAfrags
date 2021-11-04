@@ -145,7 +145,12 @@ verbose=FALSE,threads=1){
       if(verbose){
         print(paste(bin_path,"view",flags,bam, x,paste0(" | awk '{sub(\"^-\", \"\", $9); print $9}' |sort |uniq -c | sort -k2 -V | awk '{print \"",sample_name,"\"\"\\t\"\"",x,"\"\"\\t\"$2\"\\t\"$1}' ")))
       }
-      system(paste(bin_path,"view",flags,bam, x,paste0(" | awk '{sub(\"^-\", \"\", $9); print $9}' |sort |uniq -c | sort -k2 -V | awk '{print \"",sample_name,"\"\"\\t\"\"",x,"\"\"\\t\"$2\"\\t\"$1}'")),intern=TRUE)
+      tryCatch({
+      dat=read.table(text=system(paste(bin_path,"view",flags,bam, x,paste0(" | awk '{sub(\"^-\", \"\", $9); print $9}' |sort |uniq -c | sort -k2 -V | awk '{print \"",sample_name,"\"\"\\t\"\"",x,"\"\"\\t\"$2\"\\t\"$1}'")),intern=TRUE))
+      },error=function(e){
+        return(NULL)
+      })
+
     },mc.cores=threads)
     dat=dplyr::bind_rows(dat)
     names(dat)=c("SAMPLE","REGION","SIZE","COUNT")
