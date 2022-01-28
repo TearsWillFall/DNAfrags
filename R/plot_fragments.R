@@ -126,40 +126,81 @@ plot_fragments_length <- function(file = "", verbose = FALSE, min_frag_length = 
 #' @param remove_unmapped Removes unmapped reads and/or mates. Only in BAM files. Default TRUE
 #' @param bam Path to BAM file.
 #' @param threads Number of threads to use.
+#' @param bed Path to BED file
+#' @param tmp_dir Path to tmp file dir
 #' @export
 
-get_fragments_length <- function(bin_path = "tools/samtools/samtools", bam = "", remove_unmapped = TRUE,
-                                 verbose = FALSE, threads = 1) {
+get_fragments_length <- function(bin_path = "tools/samtools/samtools", bam = "", bed="", remove_unmapped = TRUE,
+                                 verbose = FALSE, threads = 1,tmp_dir="/tmp") {
   sample_name <- ULPwgs::get_sample_name(bam)
   flags <- ""
   if (remove_unmapped) {
     flags <- "-F 4 -f 2"
   }
 
-  chrs <- get_chr_names_in_bam(bin_path = bin_path, bam = bam, verbose = verbose)
+  if (bed != "") {
+    ref_data <- read.table(bed, comment.char = "")
 
-  dat <- parallel::mclapply(chrs, FUN = function(x) {
+    if (!grepl("chr", chr_check)) {
+      ref_data[, 1] <- gsub("chr", "", ref_data[, 1])
+    }
+  }
+
+  tmp_dir=paste0(" -T ",tmp_dir)
+
+
+  chrs <- get_chr_names_in_bam(bin_path = bin_path, bam = bam, verbose = verbose)
+  if (bed=""){
+    dat <- parallel::mclapply(chrs, FUN = function(x) {
+      if (verbose) {
+        print(paste(bin_path, " view ", tmp_dir, flags, bam, x, paste0(" | awk '{sub(\"^-\", \"\", $9); print $9}' |sort |uniq -c | sort -k2 -V | awk '{print \"", sample_name, "\"\"\\t\"\"", x, "\"\"\\t\"$2\"\\t\"$1}' ")))
+      }
+      tryCatch(
+        {
+          dat <- read.table(text = system(paste(bin_path, " view ",tmp_dir, flags, bam, x, paste0(" | awk '{sub(\"^-\", \"\", $9); print $9}' |sort |uniq -c | sort -k2 -V | awk '{print \"", sample_name, "\"\"\\t\"\"", x, "\"\"\\t\"$2\"\\t\"$1}'")), intern = TRUE))
+        },
+        error = function(e) {
+          return(NULL)
+        }
+      )
+    }, mc.cores = threads)
+
+    dat <- dplyr::bind_rows(dat)
+    names(dat) <- c("SAMPLE", "REGION", "SIZE", "COUNT")
+    dat_tmp <- dat %>%
+      dplyr::group_by(SAMPLE, SIZE) %>%
+      dplyr::summarise(COUNT = sum(COUNT))
+    dat_tmp$REGION <- "GENOME"
+    dat <- dplyr::bind_rows(dat, dat_tmp)
+    write.table(file = paste0(sample_name, "_fragment_length.txt"), dat, quote = FALSE, col.names = TRUE, row.names = FALSE)
+    return(dat)
+}else{
+  dat <- parallel::mclapply(1:nrow(ref_data), FUN = function(x) {
     if (verbose) {
-      print(paste(bin_path, "view", flags, bam, x, paste0(" | awk '{sub(\"^-\", \"\", $9); print $9}' |sort |uniq -c | sort -k2 -V | awk '{print \"", sample_name, "\"\"\\t\"\"", x, "\"\"\\t\"$2\"\\t\"$1}' ")))
+      print(paste(bin_path, " view ",tmp_dir, flags, bam, paste0(ref_data[x,1],":",ref_data[x,2],"-",ref_data[x,3]), paste0(" | awk '{sub(\"^-\", \"\", $9); print $9}' |sort |uniq -c | sort -k2 -V | awk '{print \"", sample_name, "\"\"\\t\"\"", x, "\"\"\\t\"$2\"\\t\"$1}' ")))
     }
     tryCatch(
       {
-        dat <- read.table(text = system(paste(bin_path, "view", flags, bam, x, paste0(" | awk '{sub(\"^-\", \"\", $9); print $9}' |sort |uniq -c | sort -k2 -V | awk '{print \"", sample_name, "\"\"\\t\"\"", x, "\"\"\\t\"$2\"\\t\"$1}'")), intern = TRUE))
+        dat <- read.table(text = system(paste(bin_path, " view ",tmp_dir, flags, bam, x, paste0(" | awk '{sub(\"^-\", \"\", $9); print $9}' |sort |uniq -c | sort -k2 -V | awk '{print \"", sample_name, "\"\"\\t\"\"", x, "\"\"\\t\"$2\"\\t\"$1}'")), intern = TRUE))
       },
       error = function(e) {
         return(NULL)
       }
     )
+    if (!is.null(ref_data[x,4])){
+      dat$GENE=ref_data[x,4]
+    }else{
+      dat$GENE=""
+    }
   }, mc.cores = threads)
-  dat <- dplyr::bind_rows(dat)
-  names(dat) <- c("SAMPLE", "REGION", "SIZE", "COUNT")
-  dat_tmp <- dat %>%
-    dplyr::group_by(SAMPLE, SIZE) %>%
-    dplyr::summarise(COUNT = sum(COUNT))
-  dat_tmp$REGION <- "GENOME"
-  dat <- dplyr::bind_rows(dat, dat_tmp)
-  write.table(file = paste0(sample_name, "_fragment_length.txt"), dat, quote = FALSE, col.names = TRUE, row.names = FALSE)
-  return(dat)
+
+}
+dat <- dplyr::bind_rows(dat)
+names(dat) <- c("SAMPLE", "REGION", "SIZE", "COUNT","GENE")
+write.table(file = paste0(sample_name, "_fragment_length.txt"), dat, quote = FALSE, col.names = TRUE, row.names = FALSE)
+return(dat)
+
+
 }
 
 
