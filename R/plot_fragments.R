@@ -150,7 +150,7 @@ get_fragments_length <- function(bin_path = "tools/samtools/samtools", bam = "",
 
 
   chrs <- get_chr_names_in_bam(bin_path = bin_path, bam = bam, verbose = verbose)
-  if (bed=""){
+  if (bed==""){
     dat <- parallel::mclapply(chrs, FUN = function(x) {
       if (verbose) {
         print(paste(bin_path, " view ", tmp_dir, flags, bam, x, paste0(" | awk '{sub(\"^-\", \"\", $9); print $9}' |sort |uniq -c | sort -k2 -V | awk '{print \"", sample_name, "\"\"\\t\"\"", x, "\"\"\\t\"$2\"\\t\"$1}' ")))
