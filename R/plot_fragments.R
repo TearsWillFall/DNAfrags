@@ -176,34 +176,32 @@ get_fragments_length <- function(bin_path = "tools/samtools/samtools", bam = "",
         dplyr::summarise(COUNT = sum(COUNT))
       dat_tmp$REGION <- "GENOME"
       dat <- dplyr::bind_rows(dat, dat_tmp)
-      write.table(file = paste0(sample_name, "_fragment_length.txt"), dat, quote = FALSE, col.names = TRUE, row.names = FALSE)
-      return(dat)
   }else{
     dat <- parallel::mclapply(1:nrow(ref_data), FUN = function(x) {
       if (verbose) {
-        print(paste(bin_path, " view ", flags, bam, paste0(ref_data[x,1],":",ref_data[x,2],"-",ref_data[x,3]), paste0(" | awk '{sub(\"^-\", \"\", $9); print $9}' |sort |uniq -c | sort -k2 -V | awk '{print \"", sample_name, "\"\"\\t\"\"", x, "\"\"\\t\"$2\"\\t\"$1}' ")))
+        print(paste(bin_path, " view ", flags, bam, paste0(ref_data[x,1],":",ref_data[x,2],"-",ref_data[x,3]), paste0(" | awk '{sub(\"^-\", \"\", $9); print $9}' |sort |uniq -c | sort -k2 -V | awk '{print \"", sample_name, "\"\"\\t\"\"",ref_data[x,1] , "\"\"\\t\"$2\"\\t\"$1}' ")))
       }
       tryCatch(
         {
-          dat <- read.table(text = system(paste(bin_path, " view ", flags, bam,paste0(ref_data[x,1],":",ref_data[x,2],"-",ref_data[x,3]), paste0(" | awk '{sub(\"^-\", \"\", $9); print $9}' |sort |uniq -c | sort -k2 -V | awk '{print \"", sample_name, "\"\"\\t\"\"", x, "\"\"\\t\"$2\"\\t\"$1}'")), intern = TRUE))
+          dat <- read.table(text = system(paste(bin_path, " view ", flags, bam,paste0(ref_data[x,1],":",ref_data[x,2],"-",ref_data[x,3]), paste0(" | awk '{sub(\"^-\", \"\", $9); print $9}' |sort |uniq -c | sort -k2 -V | awk '{print \"", sample_name, "\"\"\\t\"\"", paste0(ref_data[x,1],
+            ";",ref_data[x,4]), "\"\"\\t\"$2\"\\t\"$1}'")), intern = TRUE))
         },
         error = function(e) {
           return(NULL)
         }
       )
-      if (!is.null(ref_data[x,4])){
-        dat[,5]=ref_data[x,4]
-      }else{
-        dat[,5]=""
-      }
+
     }, mc.cores = threads)
 
   }
-  dat <- dplyr::bind_rows(dat)
-  names(dat) <- c("SAMPLE", "REGION", "SIZE", "COUNT","GENE")
-  write.table(file = paste0(sample_name, "_fragment_length.txt"), dat, quote = FALSE, col.names = TRUE, row.names = FALSE)
-  return(dat)
 
+  dat <- dplyr::bind_rows(dat)
+  names(dat) <- c("SAMPLE", "REGION", "SIZE", "COUNT")
+  dat_tmp <- dat %>%
+    dplyr::group_by(SAMPLE, SIZE) %>%
+    dplyr::summarise(COUNT = sum(COUNT))
+  dat_tmp$REGION <- "GENOME"
+  dat <- dplyr::bind_rows(dat, dat_tmp)
 
 }
 
