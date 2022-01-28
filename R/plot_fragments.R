@@ -138,6 +138,10 @@ get_fragments_length <- function(bin_path = "tools/samtools/samtools", bam = "",
     flags <- "-F 4 -f 2"
   }
 
+
+  chr_check <- system(paste(bin_path, " view ",tmp_dir, bam, " | head -n 1 | awk -F \"\t\" '{print $3}'"), intern = TRUE)
+
+
   if (bed != "") {
     ref_data <- read.table(bed, comment.char = "")
 
