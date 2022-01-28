@@ -193,7 +193,7 @@ get_fragments_length <- function(bin_path = "tools/samtools/samtools", bam = "",
   names(dat) <- c("SAMPLE", "REGION", "SIZE", "COUNT")
   dat_tmp <- dat %>%
     dplyr::group_by(SAMPLE, SIZE) %>%
-    dplyr::summarise(COUNT = sum(COUNT))
+    dplyr::summarise(COUNT = sum(as.numeric(COUNT)))
   dat_tmp$REGION <- "GENOME"
   dat <- dplyr::bind_rows(dat, dat_tmp)
   write.table(file = paste0(sample_name, "_fragment_length.txt"), dat, quote = FALSE, col.names = TRUE, row.names = FALSE)
