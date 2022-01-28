@@ -143,7 +143,7 @@ get_fragments_length <- function(bin_path = "tools/samtools/samtools", bam = "",
 
 
     if (bed != "") {
-      ref_data <- read.table(bed, comment.char = "",stringsAsFactors=FALSE)
+      ref_data <- read.table(bed, comment.char = "",stringsAsFactors=FALSE,colClasses="character")
 
       if (!grepl("chr", chr_check)) {
         ref_data[, 1] <- gsub("chr", "", ref_data[, 1])
@@ -161,7 +161,7 @@ get_fragments_length <- function(bin_path = "tools/samtools/samtools", bam = "",
         }
         tryCatch(
           {
-            dat <- read.table(text = system(paste(bin_path, " view ", flags, bam, x, paste0(" | awk '{sub(\"^-\", \"\", $9); print $9}' |sort |uniq -c | sort -k2 -V | awk '{print \"", sample_name, "\"\"\\t\"\"", x, "\"\"\\t\"$2\"\\t\"$1}'")), intern = TRUE),stringsAsFactors=FALSE)
+            dat <- read.table(text = system(paste(bin_path, " view ", flags, bam, x, paste0(" | awk '{sub(\"^-\", \"\", $9); print $9}' |sort |uniq -c | sort -k2 -V | awk '{print \"", sample_name, "\"\"\\t\"\"", x, "\"\"\\t\"$2\"\\t\"$1}'")), intern = TRUE),stringsAsFactors=FALSE,colClasses="character")
           },
           error = function(e) {
             return(NULL)
@@ -178,7 +178,7 @@ get_fragments_length <- function(bin_path = "tools/samtools/samtools", bam = "",
       tryCatch(
         {
           dat <- read.table(text = system(paste(bin_path, " view ", flags, bam,paste0(ref_data[x,1],":",ref_data[x,2],"-",ref_data[x,3]), paste0(" | awk '{sub(\"^-\", \"\", $9); print $9}' |sort |uniq -c | sort -k2 -V | awk '{print \"", sample_name, "\"\"\\t\"\"", paste0(ref_data[x,1],
-            ";",ref_data[x,4]), "\"\"\\t\"$2\"\\t\"$1}'")), intern = TRUE),stringsAsFactors=FALSE)
+            ";",ref_data[x,4]), "\"\"\\t\"$2\"\\t\"$1}'")), intern = TRUE),stringsAsFactors=FALSE,colClasses="character")
         },
         error = function(e) {
           return(NULL)
