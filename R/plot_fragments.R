@@ -137,7 +137,7 @@ get_fragments_length <- function(bin_path = "tools/samtools/samtools", bam = "",
     flags <- "-F 4 -f 2"
   }
 
-  tmp_dir=paste0(" -T ",tmp_dir)
+
   chr_check <- system(paste(bin_path, " view ", bam, " | head -n 1 | awk -F \"\t\" '{print $3}'"), intern = TRUE)
 
 
