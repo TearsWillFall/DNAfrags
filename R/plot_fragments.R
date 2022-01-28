@@ -140,7 +140,7 @@ get_fragments_length <- function(bin_path = "tools/samtools/samtools", bam = "",
 
 
   chr_check <- system(paste(bin_path, " view ", bam, " | head -n 1 | awk -F \"\t\" '{print $3}'"), intern = TRUE)
-  
+
 
     if (bed != "") {
       ref_data <- read.table(bed, comment.char = "",stringsAsFactors=FALSE)
@@ -192,9 +192,9 @@ get_fragments_length <- function(bin_path = "tools/samtools/samtools", bam = "",
         }
       )
       if (!is.null(ref_data[x,4])){
-        dat$GENE=ref_data[x,4]
+        dat[,5]=ref_data[x,4]
       }else{
-        dat$GENE=""
+        dat[,5]=""
       }
     }, mc.cores = threads)
 
