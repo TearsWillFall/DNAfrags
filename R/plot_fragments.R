@@ -178,13 +178,14 @@ verbose=FALSE,threads=1){
 #' @param start_bin Downstream distance from (start+end)/2 position in bed file for bin
 #' @param end_bin Upstream distance from (start+end)/2 position in bed file for bin
 #' @param threads Number of cores. Default 1
+#' @param tmp_dir Temporary directory
 #' @param output_dir Directory to output results.
 #' @param mode Mode in which to output the fragment length. Default 0. Mode 0: Returns fragment length for R1 and R2 reads. Mode 1: Returns fragment legnth for R1 reads. Mode 2: Returns fragment length for R2 reads.
 #' @export
 
 
 
-get_fragment_length_bed=function(bin_path="tools/samtools/samtools",bam="",bed="",max_frag_length=1000,mapq=10,threads=1,output_dir="",verbose=FALSE,mode=0,start=NULL,end=NULL,start_bin=NULL,end_bin=NULL){
+get_fragment_length_bed=function(bin_path="tools/samtools/samtools",bam="",bed="",max_frag_length=1000,mapq=10,threads=1,output_dir="",verbose=FALSE,mode=0,start=NULL,end=NULL,start_bin=NULL,end_bin=NULL,tmp_dir="/tmp"){
 
   sample_name=ULPwgs::get_sample_name(bam)
 
@@ -215,14 +216,16 @@ get_fragment_length_bed=function(bin_path="tools/samtools/samtools",bam="",bed="
     ref_data=rbind(left_flank,ctrl_bin,right_flank)
   }
 
-  data=data.frame(chr=ref_data[,1],r_start=(as.numeric(ref_data[,2])+1),r_end=(as.numeric(ref_data[,3])+1)) %>% dplyr::mutate(f_start=ifelse((r_start-max_frag_length)<1,1,r_start-max_frag_length),f_end=(r_end+max_frag_length),r_id=as.character(ref_data[,4])) %>% dplyr::filter(!grepl("_",chr))
+  data=data.frame(chr=ref_data[,1],r_start=(as.numeric(ref_data[,2])+1),
+  r_end=(as.numeric(ref_data[,3])+1)) %>% dplyr::mutate(f_start=ifelse((r_start-max_frag_length)<1,1,
+  r_start-max_frag_length),f_end=(r_end+max_frag_length),r_id=as.character(ref_data[,4])) %>% dplyr::filter(!grepl("_",chr))
   FUN=function(x,bin_path,bam,mapq,awk_file_filter,awk_file_stats,max_frag_length,verbose,mode){
   region_data=t(x)
 
   position=paste0(region_data[1],":",as.numeric(region_data[4]),"-",as.numeric(region_data[5]))
 
   if (mode==0){
-      func=paste0("{ ",bin_path," view ",bam," -f 99 ", position," | awk -v MIN_MAPQ=",mapq,
+      func=paste0("{ ",bin_path," view ",bam," -T ",tmp_dir," -f 99 ", position," | awk -v MIN_MAPQ=",mapq,
       " -v MAX_FRAGMENT_LEN=",max_frag_length," -v CHR=",region_data[1]," -v R_START=",as.numeric(region_data[2]),
       " -v R_END=",as.numeric(region_data[3])," -v R_ID=",region_data[6]," -f ", awk_file_filter," ; ",bin_path," view ",bam," -f 163 ", position," | awk -v MIN_MAPQ=",mapq,
       " -v MAX_FRAGMENT_LEN=",max_frag_length," -v CHR=",region_data[1]," -v R_START=",as.numeric(region_data[2]),
@@ -235,7 +238,7 @@ get_fragment_length_bed=function(bin_path="tools/samtools/samtools",bam="",bed="
       fragment_data=read.csv(text=system(func,intern=TRUE),header=FALSE,sep="\t")
   }else if(mode==1){
 
-    func=paste0("{ ",bin_path," view ",bam," -f 99 ", position," | awk -v MIN_MAPQ=",mapq,
+    func=paste0("{ ",bin_path," view ",bam," -T ",tmp_dir," -f 99 ", position," | awk -v MIN_MAPQ=",mapq,
     " -v MAX_FRAGMENT_LEN=",max_frag_length," -v CHR=",region_data[1]," -v R_START=",as.numeric(region_data[2]),
     " -v R_END=",as.numeric(region_data[3])," -v R_ID=",region_data[6]," -f ", awk_file_filter,"; } | sort -k9 -n | awk -v MIN_MAPQ=",mapq,
     " -v MAX_FRAGMENT_LEN=",max_frag_length," -v CHR=",region_data[1]," -v R_START=",as.numeric(region_data[2]),
@@ -246,7 +249,7 @@ get_fragment_length_bed=function(bin_path="tools/samtools/samtools",bam="",bed="
     fragment_data=read.csv(text=system(func,intern=TRUE),header=FALSE,sep="\t")
 
   }else if(mode==2){
-    func=paste0("{ ",bin_path," view ",bam," -f 163 ", position," | awk -v MIN_MAPQ=",mapq,
+    func=paste0("{ ",bin_path," view ",bam," -T ",tmp_dir," -f 163 ", position," | awk -v MIN_MAPQ=",mapq,
     " -v MAX_FRAGMENT_LEN=",max_frag_length," -v CHR=",region_data[1]," -v R_START=",as.numeric(region_data[2]),
     " -v R_END=",as.numeric(region_data[3])," -v R_ID=",region_data[6]," -f ", awk_file_filter,"; } | sort -k9 -n | awk -v MIN_MAPQ=",mapq,
     " -v MAX_FRAGMENT_LEN=",max_frag_length," -v CHR=",region_data[1]," -v R_START=",as.numeric(region_data[2]),
