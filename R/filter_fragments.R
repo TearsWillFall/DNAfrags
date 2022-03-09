@@ -37,8 +37,7 @@ filter_fragments=function(bin_path="tools/samtools/samtools",bam="",bed="",min_f
           min_frag_size,"&& $9<=",max_frag_size,") ||", "($9<=-",min_frag_size,"&& $9>=",max_frag_size,
           ")' | ",bin_path," view -b >",paste0(sample_name,"_",min_frag_size,"_",max_frag_size,".",x,".bam")))
 
-        bams[paste0(sample_name,"_",min_frag_size,"_",max_frag_size,".",x,".bam")] <-
-        paste0(sample_name,"_",min_frag_size,"_",max_frag_size,".",x,".bam")
+        bams[paste0(sample_name,"_",min_frag_size,"_",max_frag_size,".",x,".bam")] <- paste0(sample_name,"_",min_frag_size,"_",max_frag_size,".",x,".bam")
               },
         error = function(e) {
           return(NULL)
