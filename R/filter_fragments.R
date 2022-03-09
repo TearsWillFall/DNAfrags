@@ -27,15 +27,15 @@ filter_fragments=function(bin_path="tools/samtools/samtools",bam="",bed="",min_f
     bams <-list()
     dat <- parallel::mclapply(chrs, FUN = function(x) {
       if (verbose) {
-        system(paste(bin_path,"view -h",bam,x," | \ awk 'substr($0,1,1)==\"@\""," || ($9>=",
+        system(paste(bin_path,"view -h -b",bam,x," | \ awk 'substr($0,1,1)==\"@\""," || ($9>=",
         min_frag_size,"&& $9<=",max_frag_size,") ||", "($9<=-",min_frag_size,"&& $9>=",max_frag_size,
-        ")' ",bin_path," view -b >",paste0(sample_name,"_",min_frag_size,"_",max_frag_size,".",x,".bam")))
+        ")' | ",bin_path," view -b >",paste0(sample_name,"_",min_frag_size,"_",max_frag_size,".",x,".bam")))
             }
       tryCatch(
         {
-          dat <- system(paste(bin_path,"view -h",bam,x," | \ awk 'substr($0,1,1)==\"@\""," || ($9>=",
+          dat <- system(paste(bin_path,"view -h -b",bam,x," | \ awk 'substr($0,1,1)==\"@\""," || ($9>=",
           min_frag_size,"&& $9<=",max_frag_size,") ||", "($9<=-",min_frag_size,"&& $9>=",max_frag_size,
-          ")' ",bin_path," view -b >",paste0(sample_name,"_",min_frag_size,"_",max_frag_size,".",x,".bam")))
+          ")' | ",bin_path," view -b >",paste0(sample_name,"_",min_frag_size,"_",max_frag_size,".",x,".bam")))
 
         bams[paste0(sample_name,"_",min_frag_size,"_",max_frag_size,".",x,".bam")] <-
         paste0(sample_name,"_",min_frag_size,"_",max_frag_size,".",x,".bam")
@@ -64,7 +64,7 @@ filter_fragments=function(bin_path="tools/samtools/samtools",bam="",bed="",min_f
 
     dat <- parallel::mclapply(1:nrow(ref_data), FUN = function(x) {
       if (verbose) {
-        print(paste(bin_path,"view -h",bam, paste0(ref_data[x,1],":",ref_data[x,2],
+        print(paste(bin_path,"view -h -b",bam, paste0(ref_data[x,1],":",ref_data[x,2],
         "-",ref_data[x,3])," | \ awk 'substr($0,1,1)==\"@\""," || ($9>=",
         min_frag_size,"&& $9<=",max_frag_size,") ||", "($9<=-",min_frag_size,"&& $9>=",max_frag_size,
         ")' | ",bin_path," view -b >",paste0(sample_name,"_",min_frag_size,
@@ -72,7 +72,7 @@ filter_fragments=function(bin_path="tools/samtools/samtools",bam="",bed="",min_f
             }
       tryCatch(
         {
-          dat <- system(paste(bin_path,"view -h",bam,paste0(ref_data[x,1],":",ref_data[x,2],
+          dat <- system(paste(bin_path,"view -h -b",bam,paste0(ref_data[x,1],":",ref_data[x,2],
           "-",ref_data[x,3])," | \ awk 'substr($0,1,1)==\"@\""," || ($9>=",
           min_frag_size,"&& $9<=",max_frag_size,") ||", "($9<=-",min_frag_size,"&& $9>=",max_frag_size,
           ")' | ",bin_path," view -b >",paste0(sample_name,"_",min_frag_size,
