@@ -24,32 +24,17 @@ filter_fragments=function(bin_path="tools/samtools/samtools",bam="",bed="",min_f
   sample_name=ULPwgs::get_sample_name(bam)
   chrs <- get_chr_names_in_bam(bin_path = bin_path, bam = bam, verbose = verbose)
   if (bed=="" & position==""){
-    bams <-list()
-    dat <- parallel::mclapply(chrs, FUN = function(x) {
       if (verbose) {
-        print(paste(bin_path,"view -h -b",bam,x," | \ awk 'substr($0,1,1)==\"@\""," || ($9>=",
+        print(paste(bin_path,"view -h -b",bam," | \ awk 'substr($0,1,1)==\"@\""," || ($9>=",
         min_frag_size,"&& $9<=",max_frag_size,") ||", "($9<=-",min_frag_size,"&& $9>=-",max_frag_size,
-        ")'", bin_path, "view -h >",paste0(sample_name,"_",min_frag_size,"_",max_frag_size,".",x,".bam")))
-            }
-      tryCatch(
-        {
-          dat <- system(paste(bin_path,"view -h -b",bam,x," | \ awk 'substr($0,1,1)==\"@\""," || ($9>=",
+        ")'", bin_path, "view -h >",paste0(sample_name,"_",min_frag_size,"_",max_frag_size,".bam")))
+      }
+        system(paste(bin_path,"view -h -b",bam," | \ awk 'substr($0,1,1)==\"@\""," || ($9>=",
           min_frag_size,"&& $9<=",max_frag_size,") ||", "($9<=-",min_frag_size,"&& $9>=-",max_frag_size,
-          ")'",bin_path, "view -h >",paste0(sample_name,"_",min_frag_size,"_",max_frag_size,".",x,".bam")))
+          ")'",bin_path, "view -h >",paste0(sample_name,"_",min_frag_size,"_",max_frag_size,".bam")))
 
-        bams[paste0(sample_name,"_",min_frag_size,"_",max_frag_size,".",x,".bam")] <- paste0(sample_name,"_",min_frag_size,"_",max_frag_size,".",x,".bam")
-              },
-        error = function(e) {
-          return(NULL)
-        }
-      )
-    }, mc.cores = threads)
-
-    ULPwgs::concatenate_bams(bin_path,bams=as.vector(bams),output_name=paste0(sample_name,"_",
-    min_frag_size,"_",max_frag_size),threads=threads,verbose=verbose)
-    ULPwgs::sort_and_index(bin_path,file=paste0(sample_name,"_",min_frag_size,"_",
-    max_frag_size,".bam"),threads=threads,verbose=verbose)
-
+    ULPwgs::sort_and_index(bin_path,file=paste0(sample_name,"_",min_frag_size,"-",max_frag_size,".bam"),
+    threads=threads,verbose=verbose)
 
   }else if (bed!="" & position==""){
 
@@ -92,8 +77,7 @@ filter_fragments=function(bin_path="tools/samtools/samtools",bam="",bed="",min_f
     min_frag_size,"&& $9<=",max_frag_size,") ||", "($9<=-",min_frag_size,"&& $9>=-",max_frag_size,
     ")' ", bin_path, "view -h >",paste0(sample_name,"_",min_frag_size,"-",max_frag_size,"_",position,".bam")))
 
-    ULPwgs::sort_and_index(bin_path,file=paste0(sample_name,"_",min_frag_size,"-",max_frag_size,"_",position,".bam"),
-    threads=threads,verbose=verbose)
+
 
   }else{
     return("ERROR. Multiple input methods selected")
