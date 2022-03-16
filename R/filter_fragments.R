@@ -29,13 +29,13 @@ filter_fragments=function(bin_path="tools/samtools/samtools",bam="",bed="",min_f
       if (verbose) {
         print(paste(bin_path,"view -h -b",bam,x," | \ awk 'substr($0,1,1)==\"@\""," || ($9>=",
         min_frag_size,"&& $9<=",max_frag_size,") ||", "($9<=-",min_frag_size,"&& $9>=-",max_frag_size,
-        ")' >",paste0(sample_name,"_",min_frag_size,"_",max_frag_size,".",x,".bam")))
+        ")'", bin_path, "view -h >",paste0(sample_name,"_",min_frag_size,"_",max_frag_size,".",x,".bam")))
             }
       tryCatch(
         {
           dat <- system(paste(bin_path,"view -h -b",bam,x," | \ awk 'substr($0,1,1)==\"@\""," || ($9>=",
           min_frag_size,"&& $9<=",max_frag_size,") ||", "($9<=-",min_frag_size,"&& $9>=-",max_frag_size,
-          ")' >",paste0(sample_name,"_",min_frag_size,"_",max_frag_size,".",x,".bam")))
+          ")'",bin_path, "view -h >",paste0(sample_name,"_",min_frag_size,"_",max_frag_size,".",x,".bam")))
 
         bams[paste0(sample_name,"_",min_frag_size,"_",max_frag_size,".",x,".bam")] <- paste0(sample_name,"_",min_frag_size,"_",max_frag_size,".",x,".bam")
               },
@@ -66,14 +66,14 @@ filter_fragments=function(bin_path="tools/samtools/samtools",bam="",bed="",min_f
         print(paste(bin_path,"view -h -b",bam, paste0(ref_data[x,1],":",ref_data[x,2],
         "-",ref_data[x,3])," | \ awk 'substr($0,1,1)==\"@\""," || ($9>=",
         min_frag_size,"&& $9<=",max_frag_size,") ||", "($9<=-",min_frag_size,"&& $9>=-",max_frag_size,
-        ")' >",paste0(ref_data[x,1],":",ref_data[x,2],"-",ref_data[x,3],".bam")))
+        ")'", bin_path, "view -h >",paste0(ref_data[x,1],":",ref_data[x,2],"-",ref_data[x,3],".bam")))
             }
       tryCatch(
         {
           dat <- system(paste(bin_path,"view -h -b",bam,paste0(ref_data[x,1],":",ref_data[x,2],
           "-",ref_data[x,3])," | \ awk 'substr($0,1,1)==\"@\""," || ($9>=",
           min_frag_size,"&& $9<=",max_frag_size,") ||", "($9<=-",min_frag_size,"&& $9>=-",max_frag_size,
-          ")' >",paste0(sample_name,"_",min_frag_size,
+          ")' ", bin_path, "view -h >",paste0(sample_name,"_",min_frag_size,
           "-",max_frag_size,"_",ref_data[x,1],":",ref_data[x,2],"-",ref_data[x,3],".bam")))
               },
         error = function(e) {
@@ -86,11 +86,11 @@ filter_fragments=function(bin_path="tools/samtools/samtools",bam="",bed="",min_f
       if (verbose) {
         print(paste(bin_path,"view -h",bam,position," | \ awk 'substr($0,1,1)==\"@\""," || ($9>=",
         min_frag_size,"&& $9<=",max_frag_size,") ||", "($9<=-",min_frag_size,"&& $9>=-",max_frag_size,
-        ")' >",paste0(sample_name,"_",min_frag_size,"-",max_frag_size,"_",position,".bam")))
+        ")' ", bin_path, "view -h >",paste0(sample_name,"_",min_frag_size,"-",max_frag_size,"_",position,".bam")))
       }
     system(paste(bin_path,"view -h",bam,position," | \ awk 'substr($0,1,1)==\"@\""," || ($9>=",
     min_frag_size,"&& $9<=",max_frag_size,") ||", "($9<=-",min_frag_size,"&& $9>=-",max_frag_size,
-    ")' >",paste0(sample_name,"_",min_frag_size,"-",max_frag_size,"_",position,".bam")))
+    ")' ", bin_path, "view -h >",paste0(sample_name,"_",min_frag_size,"-",max_frag_size,"_",position,".bam")))
 
   }else{
     return("ERROR. Multiple input methods selected")
