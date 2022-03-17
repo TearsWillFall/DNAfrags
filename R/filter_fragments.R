@@ -33,6 +33,8 @@ filter_fragments=function(bin_path="tools/samtools/samtools",bam="",bed="",min_f
           min_frag_size,"&& $9<=",max_frag_size,") ||", "($9<=-",min_frag_size,"&& $9>=-",max_frag_size,
           ")'|",bin_path, "view -h >",paste0(sample_name,"_",min_frag_size,"_",max_frag_size,".bam")))
 
+
+    system(paste0("rm -r ",sample_name,"_",min_frag_size,"_",max_frag_size,".bam"))
     ULPwgs::sort_and_index(bin_path,file=paste0(sample_name,"_",min_frag_size,"_",max_frag_size,".bam"),
     threads=threads,verbose=verbose)
 
